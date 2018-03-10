@@ -13,6 +13,7 @@ app.use(bodyParser.json())
 app.use(cors())
 app.use(history())
 
+/* eslint-disable*/
 app.use(serveStatic(__dirname + '/dist'))
 
 var port = process.env.PORT || 5000
