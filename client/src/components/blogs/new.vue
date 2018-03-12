@@ -8,7 +8,7 @@
       </div>
       <div class="form-group">
         <label for="image">Image</label>
-        <input v-model="newBlog.image" type="text" class="form-control" id="image"  placeholder="Enter image">
+        <input @change="onFileChanged" type="file" class="form-control" id="image">
       </div>
       <div class="form-group">
         <label for="body">Body</label>
@@ -25,17 +25,26 @@ import * as types from '../../store/types.js'
 export default {
   data () {
     return {
-      newBlog: {}
+      newBlog: {},
+      selectedFile: null
     }
   },
   methods: {
     async submit () {
-      const response = await database.newBlog({blog: this.newBlog})
+      var formData = new FormData()
+      formData.append('blogImage', this.selectedFile)
+      for (var key in this.newBlog) {
+        formData.append(key, this.newBlog[key])
+      }
+      const response = await database.newBlog(formData)
       const status = response.data.status
       if (status) {
         this.$store.dispatch(types.INIT_BLOGS)
         this.$router.push('/blogs')
       }
+    },
+    onFileChanged (event) {
+      this.selectedFile = event.target.files[0]
     }
   }
 }

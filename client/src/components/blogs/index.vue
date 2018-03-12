@@ -1,7 +1,7 @@
 <template>
   <div class="card-group row">
     <div class="col-sm-6 col-md-4 flex px-0" v-for="blog in blogs" :key="blog._id">
-      <img class="card-img-top" :src="blog.image" alt="Card image cap">
+      <img class="card-img-top" :src="blog.dbLocation + blog.image" alt="Card image cap">
       <div class="card-body">
         <router-link tag="h5" :to="{name:'showBlog', params: {id:blog._id}}" class="card-title text-uppercase" style = "cursor: pointer">
           {{blog.title}}

@@ -1,6 +1,6 @@
 <template>
   <div v-if="blog" class="card">
-    <img class="card-img-top" :src="blog.image" alt="Card image cap">
+    <img class="card-img-top" :src="blog.dbLocation + blog.image" alt="Card image cap">
     <p>{{blog.created | date}}</p>
     <div class="card-body">
       <h5 class="card-title">{{blog.title}}</h5>

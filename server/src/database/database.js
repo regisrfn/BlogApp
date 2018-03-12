@@ -2,10 +2,11 @@ const mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost/blog_app')
 
 var blogSchema = new mongoose.Schema({
-    title:String,
-    image:String,
-    body:String,
-    created: {type: Date, default:Date.now}
+    title:{ type: String, required: true},
+    image:{ type: String, required: true},
+    body:{ type: String, required: true},
+    created: {type: Date, default:Date.now},
+    dbLocation: { type: String, default: 'http://blogapp.eastus.cloudapp.azure.com:8081/'}
 })
 
 var Blog = mongoose.model("Blog", blogSchema)
