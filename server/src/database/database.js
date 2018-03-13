@@ -6,7 +6,7 @@ var blogSchema = new mongoose.Schema({
     image:{ type: String, required: true},
     body:{ type: String, required: true},
     created: {type: Date, default:Date.now},
-    dbLocation: { type: String, default: 'http://localhost:8081/'}
+    dbLocation: { type: String, default: 'http://app-server.westus.cloudapp.azure.com:8081/'}
 })
 
 var Blog = mongoose.model("Blog", blogSchema)
