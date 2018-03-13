@@ -3,6 +3,8 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const morgan = require('morgan')
 const database = require('./database/database')
+const fs = require('fs')
+const path = require('path')
 
 const multer  = require('multer')
 const storage = multer.diskStorage({
@@ -64,8 +66,16 @@ app.get("/blogs/:id", function(req, res) {
 })
 
 // EDIT
-app.put("/blogs/:id", function(req, res) {
-    blogDB.findByIdAndUpdate(req.params.id , req.body.blog ,function (error, blog) {
+app.put("/blogs/:id", upload.single('blogImage'), function(req, res) {
+    const blog = {
+        title: req.body.title,
+        body: req.body.body
+    }
+    const file = req.file
+    if (file) {
+        blog.image = req.file.path
+    }
+    blogDB.findByIdAndUpdate(req.params.id , blog ,function (error, blog) {
         if(error){
             res.send({error})
         }else {
@@ -75,12 +85,15 @@ app.put("/blogs/:id", function(req, res) {
 })
 
 // delete
-// EDIT
 app.delete("/blogs/:id", function(req, res) {
     blogDB.findByIdAndRemove(req.params.id ,function (error, blog) {
         if(error){
             res.send({error})
         }else {
+            fs.unlink(path.join(__dirname,'../' + blog.image), (err) => {
+                if (err) throw err;
+                console.log('successfully deleted '+ blog.image);
+            })
             res.send({status: true})
         }
     })

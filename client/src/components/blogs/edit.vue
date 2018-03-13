@@ -1,14 +1,15 @@
 <template>
   <div v-if="blog" class="d-flex justify-content-center">
     <form v-on:submit.prevent="submit">
-      <h1 vonce>Edit {{blog.title}}</h1>
+      <h1 vonce>Edit</h1>
       <div class="form-group">
         <label for="title">Title</label>
         <input v-model="blog.title" type="text" class="form-control" id="title">
       </div>
       <div class="form-group">
+        <img class="card-img-top" :src="blog.dbLocation + blog.image" alt="Card image cap">
         <label for="image">Image</label>
-        <input v-model="blog.image" type="text" class="form-control" id="image">
+        <input @change="onFileChanged" type="file" class="form-control" id="image">
       </div>
       <div class="form-group">
         <label for="body">Body</label>
@@ -23,6 +24,11 @@
 import database from '../../services/database.js'
 import * as types from '../../store/types.js'
 export default {
+  data () {
+    return {
+      selectedFile: null
+    }
+  },
   computed: {
     blog () {
       return this.$store.getters[types.BLOG]
@@ -33,12 +39,21 @@ export default {
   },
   methods: {
     async submit () {
-      const response = await database.updateBlog(this.$route.params.id, {blog: this.blog})
-      console.log(response.data)
+      var formData = new FormData()
+      if (this.selectedFile) {
+        formData.append('blogImage', this.selectedFile)
+      }
+      for (var key in this.blog) {
+        formData.append(key, this.blog[key])
+      }
+      const response = await database.updateBlog(this.$route.params.id, formData)
       const status = response.data.status
       if (status) {
         this.$router.push('/blogs/' + this.$route.params.id)
       }
+    },
+    onFileChanged (event) {
+      this.selectedFile = event.target.files[0]
     }
   }
 }
