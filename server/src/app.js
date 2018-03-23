@@ -5,26 +5,20 @@ const morgan = require('morgan')
 const database = require('./database/database')
 const fs = require('fs')
 const path = require('path')
-
-const multer  = require('multer')
-const storage = multer.diskStorage({
-    destination:  function (req, file, cb) {
-        cb(null, './uploads')
-    },
-    filename:  function (req, file, cb) {
-        cb(null, new Date().toISOString() + file.originalname)
-    }
-
-})
-const upload = multer({storage})
+const upload = require('./models/multer')
+const userRoutes = require('./routes/user')
+const checkAuth = require('./middleware/chechAuth')
 
 const app = express()
 const blogDB = database.Blog
+
 
 app.use('/uploads', express.static('uploads'))
 app.use(morgan('combine'))
 app.use(bodyParser.json())
 app.use(cors())
+
+app.use('/user', userRoutes)
 
 app.get('/blogs', function (req, res) {
     blogDB.find({}, function (error, blogs) {
@@ -36,7 +30,7 @@ app.get('/blogs', function (req, res) {
     })
 })
 
-app.post('/blogs', upload.single('blogImage'), function (req, res) {
+app.post('/blogs', upload.single('blogImage'), checkAuth, function (req, res) {
     const blog = {
         title: req.body.title,
         body: req.body.body

@@ -26,7 +26,10 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch(types.INIT_BLOGS)
+    var vm = this
+    setInterval(function () {
+      vm.$store.dispatch(types.INIT_BLOGS)
+    }, 1000)
   },
   filters: {
     minText (value) {

@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar fixed-top navbar-expand-md navbar-dark bg-dark">
+  <nav class="navbar fixed-top navbar-expand-sm navbar-dark bg-dark">
   <router-link to="/" class="navbar-brand" href="#">
     <i class="fas fa-code fa-2x"></i>
   </router-link>
@@ -10,14 +10,37 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <router-link class="nav-link" to="/blogs">Blogs <span class="sr-only">(current)</span></router-link>
+        <router-link class="nav-link" data-toggle="collapse" href="#navbarSupportedContent" role="button" aria-expanded="false" aria-controls="collapseExample"
+        to="/blogs">
+        Blogs <span class="sr-only">(current)</span>
+        </router-link>
       </li>
       <li class="nav-item">
-        <router-link class="nav-link" to="/blogs/new">New Blog</router-link>
+        <router-link class="nav-link" data-toggle="collapse" href="#navbarSupportedContent" role="button" aria-expanded="false" aria-controls="collapseExample"
+        to="/blogs/new">
+          New Blog
+        </router-link>
       </li>
-      <li class="nav-item dropdown">
+    </ul>
+
+    <ul class="navbar-nav">
+      <template v-if="!username">
+        <li class="nav-item">
+        <router-link class="nav-link" data-toggle="collapse" href="#navbarSupportedContent" role="button" aria-expanded="false" aria-controls="collapseExample"
+        to="/user/login">
+          Login
+        </router-link>
+      </li>
+      <li class="nav-item">
+        <router-link class="nav-link" data-toggle="collapse" href="#navbarSupportedContent" role="button" aria-expanded="false" aria-controls="collapseExample"
+        to="/user/signup">
+          Sign Up
+        </router-link>
+      </li>
+      </template>
+      <li v-if="username" class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
+          {{username}}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="#">Action</a>
@@ -26,17 +49,21 @@
           <a class="dropdown-item" href="#">Something else here</a>
         </div>
       </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
-      </li>
     </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
   </div>
 </nav>
 </template>
+
+<script>
+import * as types from '../../store/types.js'
+export default {
+  computed: {
+    username () {
+      return this.$store.getters[types.USER]
+    }
+  }
+}
+</script>
 
 <style scoped>
 .navbar {

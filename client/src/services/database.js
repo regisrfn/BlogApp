@@ -15,5 +15,11 @@ export default {
   },
   updateBlog (id, blog) {
     return Api().put('blogs/' + id, blog)
+  },
+  login (user) {
+    return Api().post('user/login', user)
+  },
+  checkToken (token) {
+    return Api().post('user/verify', token)
   }
 }

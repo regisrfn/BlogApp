@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const store = require('./store')
 mongoose.connect('mongodb://localhost/blog_app')
 
 var blogSchema = new mongoose.Schema({
@@ -6,10 +7,16 @@ var blogSchema = new mongoose.Schema({
     image:{ type: String, required: true},
     body:{ type: String, required: true},
     created: {type: Date, default:Date.now},
-    dbLocation: { type: String, default: 'http://app-server.westus.cloudapp.azure.com:8081/'}
+    dbLocation: { type: String, default: store.local}
 })
 
+var commentSchema = new mongoose.Schema({
+    text: String,
+    author: String
+});
+
 var Blog = mongoose.model("Blog", blogSchema)
+var CommentDB = mongoose.model("Comment", commentSchema);
 
 // // TEST
 // Blog.create({
@@ -19,3 +26,4 @@ var Blog = mongoose.model("Blog", blogSchema)
 // })
 
 module.exports.Blog = Blog
+module.exports.Comment = CommentDB
