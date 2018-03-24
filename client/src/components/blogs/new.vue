@@ -36,7 +36,6 @@ export default {
       for (var key in this.newBlog) {
         formData.append(key, this.newBlog[key])
       }
-      formData.append('token', this.$store.getters[types.TOKEN])
       const response = await database.newBlog(formData)
       const status = response.data.status
       if (status) {

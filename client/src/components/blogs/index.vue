@@ -20,6 +20,11 @@
 import * as types from '../../store/types.js'
 
 export default {
+  data () {
+    return {
+      interval: null
+    }
+  },
   computed: {
     blogs () {
       return this.$store.getters[types.BLOGS]
@@ -27,9 +32,12 @@ export default {
   },
   created () {
     var vm = this
-    setInterval(function () {
+    this.interval = setInterval(function () {
       vm.$store.dispatch(types.INIT_BLOGS)
     }, 1000)
+  },
+  beforeDestroy () {
+    clearInterval(this.interval)
   },
   filters: {
     minText (value) {

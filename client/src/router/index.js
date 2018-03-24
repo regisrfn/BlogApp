@@ -9,6 +9,8 @@ import editBlog from '../components/blogs/edit.vue'
 import user from '../components/user/user.vue'
 import login from '../components/user/login.vue'
 import signup from '../components/user/signup.vue'
+import store from '../store/store'
+import * as types from '../store/types'
 
 Vue.use(Router)
 
@@ -22,6 +24,13 @@ export default new Router({
     {
       path: '/blogs',
       component: Blogs,
+      beforeEnter: (to, from, next) => {
+        if (store.getters[types.TOKEN]) {
+          next()
+        } else {
+          next('/user/login')
+        }
+      },
       children: [
         {
           path: '',

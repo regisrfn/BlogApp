@@ -17,6 +17,14 @@ export default {
     [types.SET_AUTH_DATA] ({commit}, auth) {
       commit(types.SET_TOKEN, auth.token)
       commit(types.SET_USER, auth.username)
+    },
+    [types.TRY_OUT_LOGIN] ({commit, dispatch}) {
+      const token = localStorage.getItem('token')
+      if (!token) {
+        return
+      }
+      const username = localStorage.getItem('username')
+      dispatch(types.SET_AUTH_DATA, {token, username})
     }
   },
   getters: {

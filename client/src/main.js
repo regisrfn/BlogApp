@@ -4,8 +4,11 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store/store'
+import * as types from './store/types'
 
 Vue.config.productionTip = false
+
+store.dispatch(types.TRY_OUT_LOGIN)
 
 /* eslint-disable no-new */
 new Vue({

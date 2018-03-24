@@ -18,3 +18,4 @@ export const INIT_BLOG = 'INIT_BLOG'
 
 export const AUTO_AUTH = 'AUTH_AUTO'
 export const SET_AUTH_DATA = 'SET_AUTH_DATA'
+export const TRY_OUT_LOGIN = 'TRY_OUT_LOGIN'

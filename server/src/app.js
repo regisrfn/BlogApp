@@ -60,7 +60,7 @@ app.get("/blogs/:id", function(req, res) {
 })
 
 // EDIT
-app.put("/blogs/:id", upload.single('blogImage'), function(req, res) {
+app.put("/blogs/:id", upload.single('blogImage'), checkAuth, function(req, res) {
     const blog = {
         title: req.body.title,
         body: req.body.body
@@ -79,7 +79,7 @@ app.put("/blogs/:id", upload.single('blogImage'), function(req, res) {
 })
 
 // delete
-app.delete("/blogs/:id", function(req, res) {
+app.delete("/blogs/:id", checkAuth, function(req, res) {
     blogDB.findByIdAndRemove(req.params.id ,function (error, blog) {
         if(error){
             res.send({error})
