@@ -42,8 +42,8 @@
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {{username}}
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" v-on:click="logout">Logout</a>
           <a class="dropdown-item" href="#">Another action</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#">Something else here</a>
@@ -60,6 +60,12 @@ export default {
   computed: {
     username () {
       return this.$store.getters[types.USER]
+    }
+  },
+  methods: {
+    logout () {
+      this.$store.dispatch(types.LOGOUT)
+      this.$router.replace('/user/login')
     }
   }
 }

@@ -23,6 +23,7 @@
 <script>
 import database from '../../services/database.js'
 import * as types from '../../store/types.js'
+import toastr from 'toastr'
 export default {
   data () {
     return {
@@ -49,6 +50,7 @@ export default {
       const response = await database.updateBlog(this.$route.params.id, formData)
       const status = response.data.status
       if (status) {
+        toastr.success('Blog has been sucessuful Edited.', 'EDITED!')
         this.$router.push('/blogs/' + this.$route.params.id)
       }
     },

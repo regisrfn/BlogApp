@@ -24,13 +24,6 @@ export default new Router({
     {
       path: '/blogs',
       component: Blogs,
-      beforeEnter: (to, from, next) => {
-        if (store.getters[types.TOKEN]) {
-          next()
-        } else {
-          next('/user/login')
-        }
-      },
       children: [
         {
           path: '',
@@ -40,7 +33,14 @@ export default new Router({
         {
           path: 'new',
           name: 'NewBlog',
-          component: NewBlog
+          component: NewBlog,
+          beforeEnter: (to, from, next) => {
+            if (store.getters[types.TOKEN]) {
+              next()
+            } else {
+              next('/user/login')
+            }
+          }
         },
         {
           path: ':id',
@@ -50,7 +50,14 @@ export default new Router({
         {
           path: ':id/edit',
           name: 'editBlog',
-          component: editBlog
+          component: editBlog,
+          beforeEnter: (to, from, next) => {
+            if (store.getters[types.TOKEN]) {
+              next()
+            } else {
+              next('/user/login')
+            }
+          }
         }
       ]
     },

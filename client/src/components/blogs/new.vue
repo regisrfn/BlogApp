@@ -22,6 +22,7 @@
 <script>
 import database from '../../services/database.js'
 import * as types from '../../store/types.js'
+import toastr from 'toastr'
 export default {
   data () {
     return {
@@ -40,6 +41,7 @@ export default {
       const status = response.data.status
       if (status) {
         this.$store.dispatch(types.INIT_BLOGS)
+        toastr.success('Blog has been sucessuful added.', 'Included!')
         this.$router.push('/blogs')
       }
     },

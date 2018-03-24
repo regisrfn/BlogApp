@@ -11,6 +11,10 @@ export default {
     },
     [types.SET_TOKEN] (state, token) {
       state.token = token
+    },
+    [types.CLEAR_AUTH] (state) {
+      state.username = null
+      state.token = null
     }
   },
   actions: {
@@ -25,6 +29,11 @@ export default {
       }
       const username = localStorage.getItem('username')
       dispatch(types.SET_AUTH_DATA, {token, username})
+    },
+    [types.LOGOUT] ({commit}) {
+      commit(types.CLEAR_AUTH)
+      localStorage.removeItem('token')
+      localStorage.removeItem('userId')
     }
   },
   getters: {

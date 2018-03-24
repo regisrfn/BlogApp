@@ -5,9 +5,10 @@ import App from './App'
 import router from './router'
 import store from './store/store'
 import * as types from './store/types'
+import Vuelidate from 'vuelidate'
 
 Vue.config.productionTip = false
-
+Vue.use(Vuelidate)
 store.dispatch(types.TRY_OUT_LOGIN)
 
 /* eslint-disable no-new */

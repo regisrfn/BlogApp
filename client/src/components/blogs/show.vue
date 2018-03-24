@@ -14,6 +14,7 @@
 <script>
 import database from '../../services/database.js'
 import * as types from '../../store/types.js'
+import toastr from 'toastr'
 
 export default {
   computed: {
@@ -32,13 +33,22 @@ export default {
     }
   },
   methods: {
-    async remove () {
-      const response = await database.deleteBlog(this.$route.params.id)
-      console.log(response.data)
-      const status = response.data.status
-      if (status) {
-        this.$router.push('/blogs')
-      }
+    remove () {
+      database.deleteBlog(this.$route.params.id)
+        .then(response => {
+          const status = response.data.status
+          if (status) {
+            this.$router.push('/blogs')
+            toastr.success('Blog has been sucessuful removed.', 'Removed!')
+          } else {
+            toastr.warning('Error removing blog.', 'Not Removed!')
+            this.$router.push('/user/login')
+          }
+        })
+        .catch(error => {
+          this.$router.push('/user/login')
+          console.log(error)
+        })
     }
   }
 }

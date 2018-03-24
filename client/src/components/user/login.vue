@@ -4,11 +4,18 @@
       <h1>Login</h1>
       <div class="form-group">
         <label for="email">Email</label>
-        <input v-model="user.email" type="email" class="form-control" id="email"  placeholder="Enter email">
+        <input v-model="email" type="email" class="form-control" id="email"  placeholder="Enter email"
+        @blur="$v.email.$touch()">
+        <div v-if="$v.email.$error" class="alert alert-danger alert-dismissible fade show mt-1" role="alert">
+            <strong>Error</strong> Please provide a valid email address
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
       </div>
       <div class="form-group">
         <label for="password">Password</label>
-        <input v-model="user.password" type="password" class="form-control" id="password"  placeholder="Enter password">
+        <input v-model="password" type="password" class="form-control" id="password"  placeholder="Enter password" required>
       </div>
       <button type="submit" class="btn btn-success w-100">Submit</button>
     </form>
@@ -18,15 +25,22 @@
 <script>
 import database from '../../services/database.js'
 import * as types from '../../store/types.js'
+import {required, email} from 'vuelidate/lib/validators'
+
 export default {
   data () {
     return {
-      user: {}
+      email: null,
+      password: null
     }
   },
   methods: {
     async submit () {
-      const response = await database.login(this.user)
+      const user = {
+        email: this.email,
+        password: this.password
+      }
+      const response = await database.login(user)
       const status = response.data.status
       console.log(response.data)
       if (status) {
@@ -37,7 +51,14 @@ export default {
         localStorage.setItem('token', authData.token)
         localStorage.setItem('username', authData.username)
         this.$store.dispatch(types.SET_AUTH_DATA, authData)
+        window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
       }
+    }
+  },
+  validations: {
+    email: {
+      email,
+      required
     }
   }
 }
