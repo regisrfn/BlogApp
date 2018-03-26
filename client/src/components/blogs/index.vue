@@ -11,6 +11,7 @@
       <router-link class="btn btn-primary" :to="{name:'showBlog', params: {id:blog._id}}">Read More ></router-link>
       <div class="card-footer">
         <small class="text-muted">Created: {{(new Date(blog.created)).toLocaleDateString()}}</small>
+        <small class="text-muted">By: {{blog.author.username}}</small>
       </div>
     </div>
   </div>

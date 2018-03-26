@@ -2,6 +2,7 @@
   <div v-if="blog" class="card">
     <img class="card-img-top" :src="blog.dbLocation + blog.image" alt="Card image cap">
     <p>{{blog.created | date}}</p>
+    <p>Created by: {{blog.author.username}}</p>
     <div class="card-body">
       <h5 class="card-title">{{blog.title}}</h5>
       <p v-html="blog.body" class="card-text text-justify"></p>

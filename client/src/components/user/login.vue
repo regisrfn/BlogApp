@@ -26,6 +26,7 @@
 import database from '../../services/database.js'
 import * as types from '../../store/types.js'
 import {required, email} from 'vuelidate/lib/validators'
+import toastr from 'toastr'
 
 export default {
   data () {
@@ -35,24 +36,31 @@ export default {
     }
   },
   methods: {
-    async submit () {
+    submit () {
       const user = {
         email: this.email,
         password: this.password
       }
-      const response = await database.login(user)
-      const status = response.data.status
-      console.log(response.data)
-      if (status) {
-        const authData = {
-          token: response.data.token,
-          username: response.data.username
-        }
-        localStorage.setItem('token', authData.token)
-        localStorage.setItem('username', authData.username)
-        this.$store.dispatch(types.SET_AUTH_DATA, authData)
-        window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
-      }
+      database.login(user)
+        .then(response => {
+          const status = response.data.status
+          console.log(response.data)
+          if (status) {
+            const authData = {
+              token: response.data.token,
+              username: response.data.username,
+              author: response.data.author
+            }
+            localStorage.setItem('token', authData.token)
+            localStorage.setItem('username', authData.username)
+            localStorage.setItem('author', authData.author)
+            this.$store.dispatch(types.SET_AUTH_DATA, authData)
+            window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
+          }
+        })
+        .catch(() => {
+          toastr.warning('Error on login', 'Error')
+        })
     }
   },
   validations: {

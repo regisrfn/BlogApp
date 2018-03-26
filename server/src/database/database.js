@@ -7,7 +7,8 @@ var blogSchema = new mongoose.Schema({
     image:{ type: String, required: true},
     body:{ type: String, required: true},
     created: {type: Date, default:Date.now},
-    dbLocation: { type: String, default: store.local}
+    dbLocation: { type: String, default: store.local},
+    author: {type: mongoose.Schema.Types.ObjectId, ref:'User', required: true}
 })
 
 var commentSchema = new mongoose.Schema({

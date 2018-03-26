@@ -21,19 +21,29 @@ app.use(cors())
 app.use('/user', userRoutes)
 
 app.get('/blogs', function (req, res) {
-    blogDB.find({}, function (error, blogs) {
-        if (error) {
-            res.send({error})
-        }else {
-            res.send({blogs})
-        }
+    blogDB.find()
+    .populate('author', 'username')
+    .exec()
+    .then(blogs => {
+        return res.status(200).json({
+            status: true,
+            blogs
+        })
     })
-})
+    .catch(error => {
+        return res.status(404).json({
+            status: false,
+            error
+        })
+    })
 
+})
+// CREATE
 app.post('/blogs', upload.single('blogImage'), checkAuth, function (req, res) {
     const blog = {
         title: req.body.title,
-        body: req.body.body
+        body: req.body.body,
+        author: req.body.author
     }
 
     const file = req.file
@@ -50,13 +60,26 @@ app.post('/blogs', upload.single('blogImage'), checkAuth, function (req, res) {
 
 app.get("/blogs/:id", function(req, res) {
 
-    blogDB.findById(req.params.id , function (error, blog) {
-        if(error){
-            res.send({error})
-        }else {
-            res.send({blog})
-        }
-    })
+    blogDB.findById(req.params.id).populate('author', 'username')
+        .exec()
+        .then(blog => {
+            if(blog){
+                return res.status(200).json({
+                    blog,
+                    status: true,
+                })
+            } else {
+                return res.status(404).json({
+                    status: false,
+                })
+            } 
+        })
+        .catch((error) => {
+            return res.status(500).json({
+                status: false,
+                error,
+            })
+        })
 })
 
 // EDIT
@@ -69,13 +92,25 @@ app.put("/blogs/:id", upload.single('blogImage'), checkAuth, function(req, res) 
     if (file) {
         blog.image = req.file.path
     }
-    blogDB.findByIdAndUpdate(req.params.id , blog ,function (error, blog) {
-        if(error){
-            res.send({error})
-        }else {
-            res.send({status: true})
-        }
-    })
+    blogDB.findByIdAndUpdate(req.params.id, blog)
+        .exec()
+        .then(blog => {
+            if(blog){
+                return res.status(200).json({
+                    status: true,
+                })
+            } else {
+                return res.status(404).json({
+                    status: false,
+                })
+            }            
+        })
+        .catch((error) => {
+            return res.status(500).json({
+                status: false,
+                error,
+            })
+        })
 })
 
 // delete

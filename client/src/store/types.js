@@ -4,6 +4,7 @@ export const BLOG = 'BLOG'
 
 export const USER = 'USER'
 export const TOKEN = 'TOKEN'
+export const AUTHOR = 'AUTHOR'
 
 // mutations
 export const SET_BLOGS = 'SET_BLOGS'
@@ -11,6 +12,7 @@ export const SET_BLOG = 'SET_BLOG'
 
 export const SET_USER = 'SET_USER'
 export const SET_TOKEN = 'SET_TOKEN'
+export const SET_AUTHOR = 'SET_AUTHOR'
 export const CLEAR_AUTH = 'CLEAR_AUTH'
 
 // actions

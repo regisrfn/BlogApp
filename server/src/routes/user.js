@@ -83,6 +83,7 @@ router.post('/login', (req, res) => {
                         status: true,
                         token: token,
                         username:user[0].username,
+                        author:user[0]._id,
                     })
                 }
                 return res.status(401).json({

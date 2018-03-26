@@ -39,7 +39,7 @@ export default {
     this.$store.dispatch(types.INIT_BLOG, this.$route.params.id)
   },
   methods: {
-    async submit () {
+    submit () {
       var formData = new FormData()
       if (this.selectedFile) {
         formData.append('blogImage', this.selectedFile)
@@ -47,12 +47,19 @@ export default {
       for (var key in this.blog) {
         formData.append(key, this.blog[key])
       }
-      const response = await database.updateBlog(this.$route.params.id, formData)
-      const status = response.data.status
-      if (status) {
-        toastr.success('Blog has been sucessuful Edited.', 'EDITED!')
-        this.$router.push('/blogs/' + this.$route.params.id)
-      }
+      database.updateBlog(this.$route.params.id, formData)
+        .then(response => {
+          const status = response.data.status
+          if (status) {
+            toastr.success('Blog has been sucessuful Edited.', 'EDITED!')
+            this.$router.push('/blogs/' + this.$route.params.id)
+          } else {
+            toastr.warning('Error updating blog', 'Error')
+          }
+        })
+        .catch(() => {
+          toastr.warning('Error updating blog', 'Error')
+        })
     },
     onFileChanged (event) {
       this.selectedFile = event.target.files[0]

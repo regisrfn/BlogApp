@@ -34,16 +34,24 @@ export default {
     async submit () {
       var formData = new FormData()
       formData.append('blogImage', this.selectedFile)
+      formData.append('author', this.$store.getters[types.AUTHOR])
       for (var key in this.newBlog) {
         formData.append(key, this.newBlog[key])
       }
-      const response = await database.newBlog(formData)
-      const status = response.data.status
-      if (status) {
-        this.$store.dispatch(types.INIT_BLOGS)
-        toastr.success('Blog has been sucessuful added.', 'Included!')
-        this.$router.push('/blogs')
-      }
+      database.newBlog(formData)
+        .then(response => {
+          const status = response.data.status
+          if (status) {
+            this.$store.dispatch(types.INIT_BLOGS)
+            toastr.success('Blog has been sucessuful added.', 'Included!')
+            this.$router.push('/blogs')
+          } else {
+            toastr.warning('Error on creating blog.', 'Error!')
+          }
+        })
+        .catch(() => {
+          toastr.warning('Error on creating blog.', 'Error!')
+        })
     },
     onFileChanged (event) {
       this.selectedFile = event.target.files[0]
