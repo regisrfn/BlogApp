@@ -31,7 +31,7 @@ export default {
     }
   },
   methods: {
-    async submit () {
+    submit () {
       var formData = new FormData()
       formData.append('blogImage', this.selectedFile)
       formData.append('author', this.$store.getters[types.AUTHOR])

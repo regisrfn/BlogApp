@@ -1,14 +1,23 @@
 <template>
-  <div v-if="blog" class="card">
-    <img class="card-img-top" :src="blog.dbLocation + blog.image" alt="Card image cap">
-    <p>{{blog.created | date}}</p>
-    <p>Created by: {{blog.author.username}}</p>
-    <div class="card-body">
-      <h5 class="card-title">{{blog.title}}</h5>
-      <p v-html="blog.body" class="card-text text-justify"></p>
-      <router-link :to="{name:'editBlog'}" class="btn btn-primary">EDIT</router-link>
-      <button v-on:click="remove" class="btn btn-danger">DELETE</button>
+  <div>
+    <div v-if="blog" class="card">
+      <img class="card-img-top" :src="blog.dbLocation + blog.image" alt="Card image cap">
+      <p>{{blog.created | date}}</p>
+      <p>Created by: {{blog.author.username}}</p>
+      <div class="card-body">
+        <h5 class="card-title">{{blog.title}}</h5>
+        <p v-html="blog.body" class="card-text text-justify"></p>
+        <router-link :to="{name:'editBlog'}" class="btn btn-primary">EDIT</router-link>
+        <button v-on:click="remove" class="btn btn-danger">DELETE</button>
+      </div>
     </div>
+    <hr>
+    <div class="form-group">
+        <label for="body"><strong>Comment</strong></label>
+        <textarea v-model="commentText" class="form-control" id="body" rows="3"></textarea>
+        <br/>
+        <button v-on:click="comment" class="btn btn-primary">Comment</button>
+      </div>
   </div>
 </template>
 
@@ -18,8 +27,14 @@ import * as types from '../../store/types.js'
 import toastr from 'toastr'
 
 export default {
+  data () {
+    return {
+      commentText: null
+    }
+  },
   computed: {
     blog () {
+      console.log(this.$store.getters[types.BLOG])
       return this.$store.getters[types.BLOG]
     }
   },
@@ -49,6 +64,24 @@ export default {
         .catch(error => {
           this.$router.push('/user/login')
           console.log(error)
+        })
+    },
+    comment () {
+      var comment = {
+        text: this.commentText,
+        author: this.$store.getters[types.AUTHOR]
+      }
+      database.comment(this.$route.params.id, {comment})
+        .then(response => {
+          const status = response.data.status
+          if (status) {
+            toastr.success('Commented on post')
+          } else {
+            toastr.warning('Error on comment post', 'Error!')
+          }
+        })
+        .catch(() => {
+          toastr.warning('Error on comment post', 'Error!')
         })
     }
   }

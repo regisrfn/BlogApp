@@ -8,23 +8,11 @@ var blogSchema = new mongoose.Schema({
     body:{ type: String, required: true},
     created: {type: Date, default:Date.now},
     dbLocation: { type: String, default: store.local},
-    author: {type: mongoose.Schema.Types.ObjectId, ref:'User', required: true}
+    author: {type: mongoose.Schema.Types.ObjectId, ref:'User', required: true},
+    comments: [
+        {type: mongoose.Schema.Types.ObjectId, ref:'Comment'}
+    ]
 })
 
-var commentSchema = new mongoose.Schema({
-    text: String,
-    author: String
-});
-
 var Blog = mongoose.model("Blog", blogSchema)
-var CommentDB = mongoose.model("Comment", commentSchema);
-
-// // TEST
-// Blog.create({
-//     title: 'Test',
-//     image: 'test',
-//     body:'Test'
-// })
-
 module.exports.Blog = Blog
-module.exports.Comment = CommentDB

@@ -21,5 +21,8 @@ export default {
   },
   checkToken (token) {
     return Api().post('user/verify', token)
+  },
+  comment (id, data) {
+    return Api().post('blogs/' + id + '/comments', data)
   }
 }
