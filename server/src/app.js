@@ -64,7 +64,7 @@ app.get("/blogs/:id", function(req, res) {
 
     blogDB.findById(req.params.id)
         .populate('author', 'username')
-        .populate('comments')
+        .populate({path: 'comments', populate: {path:'author', select:'username'}})
         .exec()
         .then(blog => {
             if(blog){
