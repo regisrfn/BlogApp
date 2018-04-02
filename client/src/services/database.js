@@ -19,6 +19,9 @@ export default {
   login (user) {
     return Api().post('user/login', user)
   },
+  signup (user) {
+    return Api().post('user', user)
+  },
   checkToken (token) {
     return Api().post('user/verify', token)
   },

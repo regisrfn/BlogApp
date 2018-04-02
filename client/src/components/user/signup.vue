@@ -67,7 +67,7 @@ export default {
                     username: this.username,
                     password: this.password
                 }
-                const response = await database.login(user)
+                const response = await database.signup(user)
                 const status = response.data.status
                 console.log(response.data)
                 if (status) {

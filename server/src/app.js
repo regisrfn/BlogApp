@@ -96,7 +96,7 @@ app.put("/blogs/:id", upload.single('blogImage'), checkAuth, function(req, res) 
     if (file) {
         blog.image = req.file.path
     }
-    blogDB.findByIdAndUpdate(req.params.id, blog)
+    blogDB.findOneAndUpdate({author:req.headers.user, _id:req.params.id}, blog)
         .exec()
         .then(blog => {
             if(blog){
@@ -160,17 +160,32 @@ app.post("/blogs/:id/comments", checkAuth, function(req, res) {
 
 // delete
 app.delete("/blogs/:id", checkAuth, function(req, res) {
-    blogDB.findByIdAndRemove(req.params.id ,function (error, blog) {
-        if(error){
-            res.send({error})
-        }else {
-            fs.unlink(path.join(__dirname,'../' + blog.image), (err) => {
-                if (err) throw err;
-                console.log('successfully deleted '+ blog.image);
+    blogDB.findOneAndRemove({author:req.headers.user, _id:req.params.id})
+        .exec()
+        .then(blog => {
+            if(blog) {
+                fs.unlink(path.join(__dirname,'../' + blog.image), (err) => {
+                    if (err) throw err;
+                    console.log('successfully deleted '+ blog.image);
+                })
+                return res.status(200).json({
+                    status: true,
+                })
+            } else {
+                return res.send({
+                    status: false,
+                    message: "User can't delete this blog"
+                })
+            }
+            
+        })
+        .catch((error) => {
+            console.log(error)
+            return res.status(500).json({
+                status: false,
+                error,
             })
-            res.send({status: true})
-        }
-    })
+        })
 })
 
 app.listen(process.env.PORT || 8081 , function () {

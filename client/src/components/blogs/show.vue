@@ -57,13 +57,11 @@ export default {
             this.$router.push('/blogs')
             toastr.success('Blog has been sucessuful removed.', 'Removed!')
           } else {
-            toastr.warning('Error removing blog.', 'Not Removed!')
-            this.$router.push('/user/login')
+            toastr.warning(response.data.message, 'Error')
           }
         })
-        .catch(error => {
+        .catch(() => {
           this.$router.push('/user/login')
-          console.log(error)
         })
     },
     comment () {

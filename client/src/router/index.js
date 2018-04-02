@@ -52,7 +52,9 @@ export default new Router({
           name: 'editBlog',
           component: editBlog,
           beforeEnter: (to, from, next) => {
-            if (store.getters[types.TOKEN]) {
+            const actualAuthor = store.getters[types.AUTHOR]
+            const blogAuthor = store.getters[types.BLOG].author._id
+            if (store.getters[types.TOKEN] && (actualAuthor === blogAuthor)) {
               next()
             } else {
               next('/user/login')
