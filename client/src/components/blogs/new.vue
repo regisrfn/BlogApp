@@ -43,7 +43,7 @@ export default {
           const status = response.data.status
           if (status) {
             this.$store.dispatch(types.INIT_BLOGS)
-            toastr.success('Blog has been sucessuful added.', 'Included!')
+            toastr.success('Blog has been sucessfully added.', 'Included!')
             this.$router.push('/blogs')
           } else {
             toastr.warning('Error on creating blog.', 'Error!')

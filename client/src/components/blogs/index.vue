@@ -33,6 +33,7 @@ export default {
   },
   created () {
     var vm = this
+    vm.$store.dispatch(types.INIT_BLOGS)
     this.interval = setInterval(function () {
       vm.$store.dispatch(types.INIT_BLOGS)
     }, 1000)

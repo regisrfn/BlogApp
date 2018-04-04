@@ -51,7 +51,7 @@ export default {
         .then(response => {
           const status = response.data.status
           if (status) {
-            toastr.success('Blog has been sucessuful Edited.', 'EDITED!')
+            toastr.success('Blog has been modified sucessufully.', 'EDITED!')
             this.$router.push('/blogs/' + this.$route.params.id)
           } else {
             toastr.warning('Error updating blog', 'Error')

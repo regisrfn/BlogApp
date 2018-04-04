@@ -11,11 +11,20 @@
         <button v-on:click="remove" class="btn btn-danger">DELETE</button>
       </div>
     </div>
-    <div class="comments">
-        <hr>
-        <hr>
-        <div>
-          <p v-if="blog.comments.length == 0"> There are not comments on this post</p>
+    <hr>
+    <hr>
+    <div class="card">
+      <div class="card-header">
+        <h4 class="text-justify"><strong>Comments <i class="fas fa-comment"></i></strong></h4>
+      </div>
+      <div class="card-body">
+        <div class="comments form-group text-justify card">
+            <label for="body"><strong>Write your comment <i class="fas fa-pencil-alt"></i></strong></label>
+            <textarea v-model="commentText" class="form-control" id="body" rows="3"></textarea>
+            <br/>
+            <button v-on:click="comment" class="btn btn-success">Comment</button>
+        </div>
+        <p v-if="blog.comments.length == 0"> There are not comments on this post</p>
           <h5 v-else> {{blog.comments.length}} comments</h5>
           <ul class="list-group">
               <li class="list-group-item list-group-item-action flex-column align-items-start"
@@ -27,13 +36,7 @@
                   <p class="mb-1">{{comment.text}}</p>
               </li>
           </ul>
-        </div>
-        <div class="form-group">
-            <label for="body"><strong>Comment</strong></label>
-            <textarea v-model="commentText" class="form-control" id="body" rows="3"></textarea>
-            <br/>
-            <button v-on:click="comment" class="btn btn-primary">Comment</button>
-        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -58,6 +61,7 @@ export default {
   },
   created () {
     var vm = this
+    vm.$store.dispatch(types.INIT_BLOG, vm.$route.params.id)
     this.interval = setInterval(function () {
       vm.$store.dispatch(types.INIT_BLOG, vm.$route.params.id)
     }, 1000)
@@ -79,7 +83,7 @@ export default {
           const status = response.data.status
           if (status) {
             this.$router.push('/blogs')
-            toastr.success('Blog has been sucessuful removed.', 'Removed!')
+            toastr.success('Blog has been sucessfully removed.', 'Removed!')
           } else {
             toastr.warning(response.data.message, 'Error')
           }
@@ -109,3 +113,11 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.comments {
+  border-left: 5px solid #00C851;
+  padding: 15px;
+}
+
+</style>

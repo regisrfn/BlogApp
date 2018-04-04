@@ -100,6 +100,10 @@ app.put("/blogs/:id", upload.single('blogImage'), checkAuth, function(req, res) 
         .exec()
         .then(blog => {
             if(blog){
+                fs.unlink(path.join(__dirname,'../' + blog.image), (err) => {
+                    if (err) throw err;
+                    console.log('successfully renamed '+ blog.image);
+                })
                 return res.status(200).json({
                     status: true,
                 })
