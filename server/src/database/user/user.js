@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const store = require('../store')
-mongoose.connect('mongodb://localhost/blog_app')
+mongoose.connect('mongodb://database_blog:acesso45@ds054999.mlab.com:54999/database_blog')
 
 var userSchema = new mongoose.Schema({
     email:{ type: String, required: true},
