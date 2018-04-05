@@ -9,6 +9,7 @@ const upload = require('./models/multer')
 const userRoutes = require('./routes/user')
 const checkAuth = require('./middleware/chechAuth')
 const commentsDB = require('./database/comments/comment')
+const cloudinary = require('./cloudinary/cloud')
 
 const app = express()
 const blogDB = database.Blog
@@ -50,6 +51,11 @@ app.post('/blogs', upload.single('blogImage'), checkAuth, function (req, res) {
 
     const file = req.file
     blog.image = req.file.path
+
+    console.log(req.file.path)
+    cloudinary.uploader.upload(req.file.path, function(result) { 
+        console.log(result) 
+    })
     
     blogDB.create(blog, function (error, blogs) {
         if (error) {
