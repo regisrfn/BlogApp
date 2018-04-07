@@ -102,7 +102,8 @@ router.post('/login', (req, res) => {
 //CREATE
 router.post('/verify', (req, res) => {
     try {
-        const decoded = jwt.verify(req.body.token, 'JWT_KEY')
+        const token = req.headers.token
+        const decoded = jwt.verify(token, 'JWT_KEY')
         return res.status(200).json({
             auth: true,
             message: "Auth success"
