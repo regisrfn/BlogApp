@@ -1,21 +1,29 @@
 <template>
-  <div class="d-flex justify-content-center">
-    <form v-on:submit.prevent="submit">
-      <h1>Create New Blog</h1>
-      <div class="form-group">
-        <label for="title">Title</label>
-        <input v-model="newBlog.title" type="text" class="form-control" id="title"  placeholder="Enter title">
-      </div>
-      <div class="form-group">
-        <label for="image">Image</label>
-        <input @change="onFileChanged" type="file" class="form-control" id="image">
-      </div>
-      <div class="form-group">
-        <label for="body">Body</label>
-        <textarea v-model="newBlog.body" class="form-control" id="body" rows="3"></textarea>
-      </div>
-      <button type="submit" class="btn btn-primary w-100">Submit</button>
-    </form>
+  <div id="container">
+    <div class="d-flex justify-content-center">
+    <div v-if="isCreatingBlog" class="infoi">
+      <div class="loader"></div>
+      <h3>Creating blog...</h3>
+    </div>
+    <div v-else>
+      <form v-on:submit.prevent="submit">
+        <h1>Create New Blog</h1>
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input v-model="newBlog.title" type="text" class="form-control" id="title"  placeholder="Enter  title">
+        </div>
+        <div class="form-group">
+          <label for="image">Image</label>
+          <input @change="onFileChanged" type="file" class="form-control" id="image">
+        </div>
+        <div class="form-group">
+          <label for="body">Body</label>
+          <textarea v-model="newBlog.body" class="form-control" id="body" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Submit</button>
+      </form>
+    </div>
+    </div>
   </div>
 </template>
 
@@ -27,11 +35,13 @@ export default {
   data () {
     return {
       newBlog: {},
-      selectedFile: null
+      selectedFile: null,
+      isCreatingBlog: false
     }
   },
   methods: {
     submit () {
+      this.isCreatingBlog = true
       var formData = new FormData()
       formData.append('blogImage', this.selectedFile)
       formData.append('author', this.$store.getters[types.AUTHOR])
@@ -46,10 +56,12 @@ export default {
             toastr.success('Blog has been sucessfully added.', 'Included!')
             this.$router.push('/blogs')
           } else {
+            this.isCreatingBlog = false
             toastr.warning('Error on creating blog.', 'Error!')
           }
         })
         .catch(() => {
+          this.isCreatingBlog = false
           toastr.warning('Error on creating blog.', 'Error!')
         })
     },

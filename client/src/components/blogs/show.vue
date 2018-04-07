@@ -1,7 +1,7 @@
 <template>
   <div v-if="blog">
     <div class="card">
-      <img class="card-img-top" :src="blog.dbLocation + blog.image" alt="Card image cap">
+      <img class="card-img-top" :src="blog.image.url" alt="Card image cap">
       <p>{{blog.created | date}}</p>
       <p>Created by: {{blog.author.username}}</p>
       <div class="card-body">

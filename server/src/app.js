@@ -49,21 +49,30 @@ app.post('/blogs', upload.single('blogImage'), checkAuth, function (req, res) {
         comments:req.body.comment
     }
 
-    const file = req.file
-    blog.image = req.file.path
-
-    console.log(req.file.path)
-    cloudinary.uploader.upload(req.file.path, function(result) { 
-        console.log(result) 
-    })
+    try {
+        cloudinary.uploader.upload(req.file.path, function(result) { 
+            var image = {
+                url: result.secure_url,
+                public_id: result.public_id
+            }
+            blog.image = image
+            blogDB.create(blog, function (error, blogs) {
+                if (error) {
+                    console.log(error)
+                    res.send({error})
+                }else {
+                    res.send({status:true})
+                }
+            })
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            status: false,
+        })
+    }
     
-    blogDB.create(blog, function (error, blogs) {
-        if (error) {
-            res.send({error})
-        }else {
-            res.send({status:true})
-        }
-    })
+    
 })
 
 app.get("/blogs/:id", function(req, res) {
@@ -100,16 +109,47 @@ app.put("/blogs/:id", upload.single('blogImage'), checkAuth, function(req, res) 
     }
     const file = req.file
     if (file) {
-        blog.image = req.file.path
-    }
-    blogDB.findOneAndUpdate({author:req.headers.user, _id:req.params.id}, blog)
+        try {
+            cloudinary.uploader.upload(req.file.path, function(result) { 
+                var image = {
+                    url: result.secure_url,
+                    public_id: result.public_id
+                }
+                blog.image = image
+                blogDB.findOneAndUpdate({author:req.headers.user, _id:req.params.id}, blog)
+                    .exec()
+                    .then(blog => {
+                        if(blog){
+                            // DELETING FILE FROM CLOUDINARY
+                            cloudinary.uploader.destroy(blog.image.public_id,
+                            {invalidate: true }, function(error, result) {console.log(result)})
+                            return res.status(200).json({
+                                status: true,
+                            })
+                        } else {
+                            return res.status(404).json({
+                                status: false,
+                            })
+                        }            
+                    })
+                    .catch((error) => {
+                        return res.status(500).json({
+                            status: false,
+                            error,
+                        })
+                    })
+            })
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                status: false,
+            })
+        }
+    } else {
+        blogDB.findOneAndUpdate({author:req.headers.user, _id:req.params.id}, blog)
         .exec()
         .then(blog => {
             if(blog){
-                fs.unlink(path.join(__dirname,'../' + blog.image), (err) => {
-                    if (err) throw err;
-                    console.log('successfully renamed '+ blog.image);
-                })
                 return res.status(200).json({
                     status: true,
                 })
@@ -124,7 +164,9 @@ app.put("/blogs/:id", upload.single('blogImage'), checkAuth, function(req, res) 
                 status: false,
                 error,
             })
-        })
+        })  
+    }
+    
 })
 
 // CREATE COMMENT
@@ -173,11 +215,10 @@ app.delete("/blogs/:id", checkAuth, function(req, res) {
     blogDB.findOneAndRemove({author:req.headers.user, _id:req.params.id})
         .exec()
         .then(blog => {
+            // DELETING FILE FROM CLOUDINARY
+            cloudinary.uploader.destroy(blog.image.public_id,
+                {invalidate: true }, function(error, result) {console.log(result)})
             if(blog) {
-                fs.unlink(path.join(__dirname,'../' + blog.image), (err) => {
-                    if (err) throw err;
-                    console.log('successfully deleted '+ blog.image);
-                })
                 return res.status(200).json({
                     status: true,
                 })

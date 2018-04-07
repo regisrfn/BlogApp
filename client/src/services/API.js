@@ -4,9 +4,7 @@ import * as types from '../store/types'
 
 export default () => {
   return axios.create({
-    // baseURL: 'http://app-server.westus.cloudapp.azure.com:8081'
-    baseURL: 'http://localhost:8081',
-    // baseURL: 'https://frozen-dawn-21965.herokuapp.com',
+    baseURL: process.env.API_DATABASE,
     headers: {'token': store.getters[types.TOKEN], 'user': store.getters[types.AUTHOR]}
   })
 }

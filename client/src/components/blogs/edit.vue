@@ -1,13 +1,18 @@
 <template>
   <div v-if="blog" class="d-flex justify-content-center">
-    <form v-on:submit.prevent="submit">
+    <div v-if="isUploadingBlog" class="infoi">
+      <div class="loader"></div>
+      <h3>Updating blog...</h3>
+    </div>
+    <div v-else>
+      <form v-on:submit.prevent="submit">
       <h1 vonce>Edit</h1>
       <div class="form-group">
         <label for="title">Title</label>
         <input v-model="blog.title" type="text" class="form-control" id="title">
       </div>
       <div class="form-group">
-        <img class="card-img-top" :src="blog.dbLocation + blog.image" alt="Card image cap">
+        <img class="card-img-top" :src="blog.image.url" alt="Card image cap">
         <label for="image">Image</label>
         <input @change="onFileChanged" type="file" class="form-control" id="image">
       </div>
@@ -17,6 +22,7 @@
       </div>
       <button type="submit" class="btn btn-primary w-100">Submit</button>
     </form>
+    </div>
   </div>
 </template>
 
@@ -27,7 +33,8 @@ import toastr from 'toastr'
 export default {
   data () {
     return {
-      selectedFile: null
+      selectedFile: null,
+      isUploadingBlog: false
     }
   },
   computed: {
@@ -40,6 +47,7 @@ export default {
   },
   methods: {
     submit () {
+      this.isUploadingBlog = true
       var formData = new FormData()
       if (this.selectedFile) {
         formData.append('blogImage', this.selectedFile)
@@ -54,10 +62,12 @@ export default {
             toastr.success('Blog has been modified sucessufully.', 'EDITED!')
             this.$router.push('/blogs/' + this.$route.params.id)
           } else {
+            this.isUploadingBlog = false
             toastr.warning('Error updating blog', 'Error')
           }
         })
         .catch(() => {
+          this.isUploadingBlog = false
           toastr.warning('Error updating blog', 'Error')
         })
     },
