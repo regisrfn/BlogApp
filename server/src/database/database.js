@@ -1,8 +1,4 @@
-const mongoose = require('mongoose')
-const store = require('./store')
-// mongoose.connect('mongodb://localhost/blog_app')
-mongoose.connect('mongodb://database_blog:acesso45@ds054999.mlab.com:54999/database_blog')
-
+const mongoose = require('../models/mongoose')
 var blogSchema = new mongoose.Schema({
     title:{ type: String, required: true},
     image:{

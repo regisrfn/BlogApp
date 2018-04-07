@@ -1,5 +1,4 @@
-const mongoose = require('mongoose')
-mongoose.connect('mongodb://database_blog:acesso45@ds054999.mlab.com:54999/database_blog')
+const mongoose = require('../../models/mongoose')
 
 var commentSchema = new mongoose.Schema({
     text:{ type: String, required: true}, 

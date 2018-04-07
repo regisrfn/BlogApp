@@ -1,9 +1,10 @@
 var cloudinary = require('cloudinary')
+require('dotenv').config()
 
 cloudinary.config({ 
-    cloud_name: 'dfssvmoxl', 
-    api_key: '815599676127595', 
-    api_secret: 'Wny-BvKyMDHMRrQ6bW4es_NAt8Y' 
+    cloud_name: process.env.CLOUD_NAME, 
+    api_key: process.env.API_KEY, 
+    api_secret: process.env.API_SECRET 
   })
 
   module.exports = cloudinary

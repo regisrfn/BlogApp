@@ -10,7 +10,6 @@ const userRoutes = require('./routes/user')
 const checkAuth = require('./middleware/chechAuth')
 const commentsDB = require('./database/comments/comment')
 const cloudinary = require('./cloudinary/cloud')
-
 const app = express()
 const blogDB = database.Blog
 
