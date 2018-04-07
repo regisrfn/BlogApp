@@ -22,8 +22,8 @@ export default {
   signup (user) {
     return Api().post('user', user)
   },
-  checkToken (token) {
-    return Api().post('user/verify', token)
+  checkToken (data) {
+    return Api().post('user/verify', data)
   },
   comment (id, data) {
     return Api().post('blogs/' + id + '/comments', data)

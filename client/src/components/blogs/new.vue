@@ -36,8 +36,20 @@ export default {
     return {
       newBlog: {},
       selectedFile: null,
-      isCreatingBlog: false
+      isCreatingBlog: false,
+      isConnectingUser: false
     }
+  },
+  created () {
+    this.isConnectingUser = true
+    database.checkToken(this.$store.getters[types.TOKEN])
+      .then(response => {
+        console.log(response.data)
+      })
+      .catch(() => {
+        this.$router.push('/user/login')
+        // this.$store.dispatch(types.LOGOUT)
+      })
   },
   methods: {
     submit () {
