@@ -12,7 +12,7 @@ const commentsDB = require('./database/comments/comment')
 const cloudinary = require('./cloudinary/cloud')
 const app = express()
 const blogDB = database.Blog
-
+const setURL = require('./models/setURL')
 
 app.use('/uploads', express.static('uploads'))
 app.use(morgan('combine'))
@@ -51,9 +51,10 @@ app.post('/blogs', upload.single('blogImage'), checkAuth, function (req, res) {
     try {
         cloudinary.uploader.upload(req.file.path, function(result) { 
             var image = {
-                url: result.secure_url,
+                url: setURL(result.secure_url,'upload/','upload/q_auto/'),
                 public_id: result.public_id
             }
+            console.log(image.url)
             blog.image = image
             blogDB.create(blog, function (error, blogs) {
                 if (error) {
