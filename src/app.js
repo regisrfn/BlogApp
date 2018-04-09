@@ -12,7 +12,6 @@ const commentsDB = require('./database/comments/comment')
 const cloudinary = require('./cloudinary/cloud')
 const app = express()
 const blogDB = database.Blog
-const setURL = require('./models/setURL')
 
 app.use('/uploads', express.static('uploads'))
 app.use(morgan('combine'))
