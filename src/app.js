@@ -51,7 +51,7 @@ app.post('/blogs', upload.single('blogImage'), checkAuth, function (req, res) {
     try {
         cloudinary.uploader.upload(req.file.path, function(result) { 
             var image = {
-                url: setURL(result.secure_url,'upload/','upload/q_auto/'),
+                url: result.secure_url,
                 public_id: result.public_id
             }
             console.log(image.url)
