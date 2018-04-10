@@ -13,7 +13,15 @@ const cloudinary = require('./cloudinary/cloud')
 const app = express()
 const blogDB = database.Blog
 
-app.use('/uploads', express.static('uploads'))
+var http = require('http')
+var socketIO = require('socket.io')
+var server = http.createServer(app)
+var io = socketIO(server)
+
+io.on('connection', (socket) => {
+    console.log("User connected")
+})
+
 app.use(morgan('combine'))
 app.use(bodyParser.json())
 app.use(cors())
@@ -46,7 +54,7 @@ app.post('/blogs', upload.single('blogImage'), checkAuth, function (req, res) {
         author: req.body.author,
         comments:req.body.comment
     }
-
+    
     try {
         cloudinary.uploader.upload(req.file.path, function(result) { 
             var image = {
@@ -55,14 +63,18 @@ app.post('/blogs', upload.single('blogImage'), checkAuth, function (req, res) {
             }
             console.log(image.url)
             blog.image = image
-            blogDB.create(blog, function (error, blogs) {
-                if (error) {
-                    console.log(error)
-                    res.send({error})
-                }else {
-                    res.send({status:true})
-                }
-            })
+            blogDB.create(blog)
+                .then((blogs) => {
+                    blogDB.find().populate('author', 'username').then((blogs) => io.sockets.emit('newBlog',blogs))
+                    return res.status(200).json({
+                        status: true,
+                    })
+                })
+                .catch((error) => {
+                    return res.status(500).json({
+                        status: false,
+                    })
+                })
         })
     } catch (error) {
         console.log(error)
@@ -238,6 +250,6 @@ app.delete("/blogs/:id", checkAuth, function(req, res) {
         })
 })
 
-app.listen(process.env.PORT || 8081 , function () {
+server.listen(process.env.PORT || 8081 , function () {
     console.log('SERVER IS RUNNING');    
 })
