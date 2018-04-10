@@ -1,7 +1,7 @@
 <template>
   <div class="card-group row">
     <div class="col-sm-6 col-md-4 flex px-0" v-for="blog in blogs" :key="blog._id">
-      <img class="card-img-top" :src="blog.image.url" alt="Card image cap">
+      <img class="card-img-top" :src="splitString(blog.image.url,'upload/','upload/w_600,c_scale/')" alt="Card image cap">
       <div class="card-body">
         <router-link tag="h5" :to="{name:'showBlog', params: {id:blog._id}}" class="card-title text-uppercase" style = "cursor: pointer">
           {{blog.title}}
@@ -34,9 +34,6 @@ export default {
   created () {
     var vm = this
     vm.$store.dispatch(types.INIT_BLOGS)
-    this.interval = setInterval(function () {
-      vm.$store.dispatch(types.INIT_BLOGS)
-    }, 1000)
   },
   beforeDestroy () {
     clearInterval(this.interval)
@@ -44,6 +41,21 @@ export default {
   filters: {
     minText (value) {
       return value.substring(0, 100)
+    }
+  },
+  methods: {
+    splitString (stringToSplit, separator, join) {
+      var arrayOfStrings = stringToSplit.split(separator)
+      return arrayOfStrings.join(join)
+    }
+  },
+  sockets: {
+    connect () {
+      console.log('socket connected')
+    },
+    newBlog (blogs) {
+      console.log(blogs)
+      this.$store.dispatch(types.setBlogs, blogs)
     }
   }
 }

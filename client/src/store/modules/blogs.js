@@ -26,6 +26,12 @@ export default {
       const blog = response.data.blog
       commit(types.SET_BLOG, blog)
       // console.log(blog)
+    },
+    [types.CLEAR_BLOG] ({commit}) {
+      commit(types.SET_BLOG, null)
+    },
+    [types.setBlogs] ({commit}, blogs) {
+      commit(types.SET_BLOGS, blogs)
     }
   },
   getters: {

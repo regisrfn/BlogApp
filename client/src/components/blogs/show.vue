@@ -1,7 +1,7 @@
 <template>
   <div v-if="blog">
     <div class="card">
-      <img class="card-img-top" :src="blog.image.url" alt="Card image cap">
+      <img class="card-img-top" :src="splitString(blog.image.url,'upload/','upload/q_auto/')" alt="Card image cap">
       <p>{{blog.created | date}}</p>
       <p>Created by: {{blog.author.username}}</p>
       <div class="card-body">
@@ -62,12 +62,10 @@ export default {
   created () {
     var vm = this
     vm.$store.dispatch(types.INIT_BLOG, vm.$route.params.id)
-    this.interval = setInterval(function () {
-      vm.$store.dispatch(types.INIT_BLOG, vm.$route.params.id)
-    }, 1000)
   },
   beforeDestroy () {
     clearInterval(this.interval)
+    this.$store.dispatch(types.CLEAR_BLOG)
   },
   filters: {
     date: function (value) {
@@ -109,6 +107,10 @@ export default {
         .catch(() => {
           toastr.warning('Error on comment post', 'Error!')
         })
+    },
+    splitString (stringToSplit, separator, join) {
+      var arrayOfStrings = stringToSplit.split(separator)
+      return arrayOfStrings.join(join)
     }
   }
 }
