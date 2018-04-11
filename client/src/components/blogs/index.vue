@@ -6,7 +6,7 @@
         <router-link tag="h5" :to="{name:'showBlog', params: {id:blog._id}}" class="card-title text-uppercase" style = "cursor: pointer">
           {{blog.title}}
         </router-link>
-        <p v-html="blog.body.substring(0, 100)" class="card-text"></p>
+        <p v-html="blog.body.substring(0, 200)" class="card-text"></p>
       </div>
       <router-link class="btn btn-primary" :to="{name:'showBlog', params: {id:blog._id}}">Read More ></router-link>
       <div class="card-footer">
@@ -21,11 +21,7 @@
 import * as types from '../../store/types.js'
 
 export default {
-  data () {
-    return {
-      interval: null
-    }
-  },
+
   computed: {
     blogs () {
       return this.$store.getters[types.BLOGS]
@@ -34,9 +30,6 @@ export default {
   created () {
     var vm = this
     vm.$store.dispatch(types.INIT_BLOGS)
-  },
-  beforeDestroy () {
-    clearInterval(this.interval)
   },
   filters: {
     minText (value) {
@@ -50,11 +43,10 @@ export default {
     }
   },
   sockets: {
-    connect () {
-      console.log('socket connected')
-    },
+    // connect () {
+    //   // console.log('socket connected')
+    // },
     newBlog (blogs) {
-      console.log(blogs)
       this.$store.dispatch(types.setBlogs, blogs)
     }
   }

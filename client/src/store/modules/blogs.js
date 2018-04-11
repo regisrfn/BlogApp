@@ -32,6 +32,9 @@ export default {
     },
     [types.setBlogs] ({commit}, blogs) {
       commit(types.SET_BLOGS, blogs)
+    },
+    [types.setBlog] ({commit}, blog) {
+      commit(types.SET_BLOG, blog)
     }
   },
   getters: {

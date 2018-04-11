@@ -18,6 +18,7 @@ export const CLEAR_AUTH = 'CLEAR_AUTH'
 // actions
 export const INIT_BLOGS = 'INIT_BLOGS'
 export const setBlogs = 'setBlogs'
+export const setBlog = 'setBlog'
 export const INIT_BLOG = 'INIT_BLOG'
 export const CLEAR_BLOG = 'CLEAR_BLOG'
 

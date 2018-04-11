@@ -64,7 +64,6 @@ export default {
     vm.$store.dispatch(types.INIT_BLOG, vm.$route.params.id)
   },
   beforeDestroy () {
-    clearInterval(this.interval)
     this.$store.dispatch(types.CLEAR_BLOG)
   },
   filters: {
@@ -111,6 +110,15 @@ export default {
     splitString (stringToSplit, separator, join) {
       var arrayOfStrings = stringToSplit.split(separator)
       return arrayOfStrings.join(join)
+    }
+  },
+  sockets: {
+    // connect () {
+    //   // console.log('socket connected')
+    // },
+    modifiedBlog (blog) {
+      console.log(blog)
+      this.$store.dispatch(types.setBlog, blog)
     }
   }
 }
