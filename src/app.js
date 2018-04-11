@@ -168,6 +168,7 @@ app.put("/blogs/:id", upload.single('blogImage'), checkAuth, function(req, res) 
         .exec()
         .then(blog => {
             if(blog){
+                blogDB.find().populate('author', 'username').then((blogs) => io.sockets.emit('newBlog',blogs))
                 blogDB.findById(req.params.id)
                     .populate('author', 'username')
                     .populate({path: 'comments', populate: {path:'author', select:'username'}})
@@ -203,7 +204,8 @@ app.post("/blogs/:id/comments", checkAuth, function(req, res) {
                         console.log(blog)
                         blog.comments.push(comment)
                         blog.save()
-                        blog.populate({path: 'comments', populate: {path:'author', select:'username'}}, () => {io.sockets.emit('modifiedBlog',blog)})
+                        blog.populate({path: 'comments', populate: {path:'author', select:'username'}}, 
+                            () => {io.sockets.emit('modifiedBlog',blog)})
                         return res.status(200).json({
                             status: true,
                         })
@@ -242,7 +244,8 @@ app.delete("/blogs/:id", checkAuth, function(req, res) {
             cloudinary.uploader.destroy(blog.image.public_id,
                 {invalidate: true }, function(error, result) {console.log(result)})
             if(blog) {
-                blogDB.find().populate('author', 'username').then((blogs) => io.sockets.emit('newBlog',blogs))
+                blogDB.find().populate('author', 'username')
+                    .then((blogs) => io.sockets.emit('newBlog',blogs))
                 return res.status(200).json({
                     status: true,
                 })
