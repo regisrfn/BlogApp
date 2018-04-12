@@ -24,11 +24,11 @@
             <br/>
             <button v-on:click="comment" class="btn btn-success">Comment</button>
         </div>
-        <p v-if="blog.comments.length == 0"> There are not comments on this post</p>
-          <h5 v-else> {{blog.comments.length}} comments</h5>
+        <p v-if="blogComments.length == 0"> There are not comments on this post</p>
+          <h5 v-else> {{blogComments.length}} comments</h5>
           <ul class="list-group">
               <li class="list-group-item list-group-item-action flex-column align-items-start"
-              v-for="comment in blog.comments" :key="comment._id">
+              v-for="comment in blogComments" :key="comment._id">
                   <div class="d-flex w-100 justify-content-between">
                       <h5 class="mb-1">{{comment.author.username}}</h5>
                       <small>3 days ago</small>
@@ -57,11 +57,16 @@ export default {
     blog () {
       // console.log(this.$store.getters[types.BLOG])
       return this.$store.getters[types.BLOG]
+    },
+    blogComments () {
+      // console.log(this.$store.getters[types.BLOG])
+      return this.$store.getters[types.COMMENTS] || []
     }
   },
   created () {
     var vm = this
     vm.$store.dispatch(types.INIT_BLOG, vm.$route.params.id)
+    vm.$store.dispatch(types.initComments, vm.$route.params.id)
   },
   beforeDestroy () {
     this.$store.dispatch(types.CLEAR_BLOG)
@@ -117,8 +122,10 @@ export default {
     //   // console.log('socket connected')
     // },
     modifiedBlog (blog) {
-      console.log(blog)
       this.$store.dispatch(types.setBlog, blog)
+    },
+    modifiedComments (comments) {
+      this.$store.dispatch(types.setComments, comments)
     }
   }
 }

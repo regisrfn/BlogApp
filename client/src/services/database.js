@@ -27,5 +27,8 @@ export default {
   },
   comment (id, data) {
     return Api().post('blogs/' + id + '/comments', data)
+  },
+  getComment (id, data) {
+    return Api().get('blogs/' + id + '/comments', data)
   }
 }

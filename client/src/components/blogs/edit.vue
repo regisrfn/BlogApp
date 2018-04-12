@@ -68,6 +68,7 @@ export default {
         })
         .catch(() => {
           this.isUploadingBlog = false
+          this.$router.push('/user/login')
           toastr.warning('Error updating blog', 'Error')
         })
     },
