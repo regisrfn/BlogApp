@@ -94,7 +94,6 @@ app.get("/blogs/:id", function(req, res) {
 
     blogDB.findById(req.params.id)
         .populate('author', 'username')
-        .populate({path: 'comments', populate: {path:'author', select:'username'}})
         .exec()
         .then(blog => {
             if(blog){
@@ -141,7 +140,6 @@ app.put("/blogs/:id", upload.single('blogImage'), checkAuth, function(req, res) 
                                 .then((blogs) => io.sockets.emit('newBlog',blogs))
                             blogDB.findById(req.params.id)
                                 .populate('author', 'username')
-                                .populate({path: 'comments', populate: {path:'author', select:'username'}})
                                 .then((blog) => io.sockets.emit('modifiedBlog',blog))
                             // DELETING FILE FROM CLOUDINARY
                             cloudinary.uploader.destroy(blog.image.public_id,
@@ -181,7 +179,6 @@ app.put("/blogs/:id", upload.single('blogImage'), checkAuth, function(req, res) 
                     .then((blogs) => io.sockets.emit('newBlog',blogs))
                 blogDB.findById(req.params.id)
                     .populate('author', 'username')
-                    .populate({path: 'comments', populate: {path:'author', select:'username'}})
                     .then((blog) => io.sockets.emit('modifiedBlog',blog))
                 return res.status(200).json({
                     status: true,
@@ -206,34 +203,33 @@ app.put("/blogs/:id", upload.single('blogImage'), checkAuth, function(req, res) 
 
 // CREATE COMMENT
 app.post("/blogs/:id/comments", checkAuth, function(req, res) {
-    // console.log(req.body.comment)
-    commentsDB.create(req.body.comment)
-        .then(comment => {
-            blogDB.findById(req.params.id)
-                .exec()
-                .then(blog => {
-                    if(blog){
-                        // console.log(blog)
-                        blog.comments.unshift(comment)
-                        blog.save()
-                        blog.populate({path: 'comments', populate: {path:'author', select:'username'}}, 
-                            () => {io.sockets.emit('modifiedBlog',blog)})
+    blogDB.findById(req.params.id)
+        .exec()
+        .then(blog => {
+            if(blog){
+                var comment = req.body.comment
+                comment.blog = blog._id
+                commentsDB.create(comment)
+                    .then( () => {
+                        commentsDB.find({blog:req.params.id})
+                            .sort({created:-1})
+                            .populate('author', 'username')
+                            .then((comments) => io.sockets.emit('modifiedComments',comments))
                         return res.status(200).json({
                             status: true,
                         })
-                    } else {
-                        return res.status(404).json({
-                            status: false,
-                        })
-                    }            
-                })
-                .catch((error) => {
-                    console.log(error)
-                    return res.status(500).json({
-                        status: false,
-                        error,
                     })
+                    .catch((error) => {
+                        console.log(error)
+                        return res.status(500).json({
+                            status: false
+                        })
+                    })
+            } else {
+                return res.status(404).json({
+                    status: false,
                 })
+            }            
         })
         .catch((error) => {
             console.log(error)
@@ -242,7 +238,43 @@ app.post("/blogs/:id/comments", checkAuth, function(req, res) {
                 error,
             })
         })
+    
+})
 
+// GET COMMENT
+app.get("/blogs/:id/comments", function(req, res) {
+    blogDB.findById(req.params.id)
+        .exec()
+        .then(blog => {
+            if(blog){
+                commentsDB.find({blog:req.params.id})
+                    .sort({created:-1})
+                    .populate('author', 'username')
+                    .exec()
+                    .then( (comments) => {
+                        return res.status(200).json({
+                            comments,
+                            status: true,
+                        })
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                        return res.status(500).json({
+                            status: false
+                        })
+                    })
+            } else {
+                return res.status(404).json({
+                    status: false,
+                })
+            }            
+        })
+        .catch((error) => {
+            console.log(error)
+            return res.status(500).json({
+                status: false
+            })
+        })
     
 })
 
