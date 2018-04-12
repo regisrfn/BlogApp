@@ -8,9 +8,6 @@ var blogSchema = new mongoose.Schema({
     body:{ type: String, required: true},
     created: {type: Date, default:Date.now},
     author: {type: mongoose.Schema.Types.ObjectId, ref:'User', required: true},
-    comments: [
-        {type: mongoose.Schema.Types.ObjectId, ref:'Comment'}
-    ]
 })
 
 var Blog = mongoose.model("Blog", blogSchema)
