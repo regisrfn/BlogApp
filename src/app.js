@@ -187,12 +187,14 @@ app.put("/blogs/:id", upload.single('blogImage'), checkAuth, function(req, res) 
                     status: true,
                 })
             } else {
+                console.log(error)
                 return res.status(404).json({
                     status: false,
                 })
             }            
         })
         .catch((error) => {
+            console.log(error)
             return res.status(500).json({
                 status: false,
                 error,
