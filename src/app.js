@@ -30,6 +30,7 @@ app.use('/user', userRoutes)
 
 app.get('/blogs', function (req, res) {
     blogDB.find()
+    .sort({created:-1})
     .populate('author', 'username')
     .exec()
     .then(blogs => {
@@ -65,7 +66,10 @@ app.post('/blogs', upload.single('blogImage'), checkAuth, function (req, res) {
             blog.image = image
             blogDB.create(blog)
                 .then((blogs) => {
-                    blogDB.find().populate('author', 'username').then((blogs) => io.sockets.emit('newBlog',blogs))
+                    blogDB.find()
+                            .sort({created:-1})
+                            .populate('author', 'username')
+                            .then((blogs) => io.sockets.emit('newBlog',blogs))
                     return res.status(200).json({
                         status: true,
                     })
@@ -131,7 +135,10 @@ app.put("/blogs/:id", upload.single('blogImage'), checkAuth, function(req, res) 
                     .exec()
                     .then(blog => {
                         if(blog){
-                            blogDB.find().populate('author', 'username').then((blogs) => io.sockets.emit('newBlog',blogs))
+                            blogDB.find()
+                                .sort({created:-1})
+                                .populate('author', 'username')
+                                .then((blogs) => io.sockets.emit('newBlog',blogs))
                             blogDB.findById(req.params.id)
                                 .populate('author', 'username')
                                 .populate({path: 'comments', populate: {path:'author', select:'username'}})
@@ -168,7 +175,10 @@ app.put("/blogs/:id", upload.single('blogImage'), checkAuth, function(req, res) 
         .exec()
         .then(blog => {
             if(blog){
-                blogDB.find().populate('author', 'username').then((blogs) => io.sockets.emit('newBlog',blogs))
+                blogDB.find()
+                    .sort({created:-1})
+                    .populate('author', 'username')
+                    .then((blogs) => io.sockets.emit('newBlog',blogs))
                 blogDB.findById(req.params.id)
                     .populate('author', 'username')
                     .populate({path: 'comments', populate: {path:'author', select:'username'}})
@@ -194,15 +204,15 @@ app.put("/blogs/:id", upload.single('blogImage'), checkAuth, function(req, res) 
 
 // CREATE COMMENT
 app.post("/blogs/:id/comments", checkAuth, function(req, res) {
-    console.log(req.body.comment)
+    // console.log(req.body.comment)
     commentsDB.create(req.body.comment)
         .then(comment => {
             blogDB.findById(req.params.id)
                 .exec()
                 .then(blog => {
                     if(blog){
-                        console.log(blog)
-                        blog.comments.push(comment)
+                        // console.log(blog)
+                        blog.comments.unshift(comment)
                         blog.save()
                         blog.populate({path: 'comments', populate: {path:'author', select:'username'}}, 
                             () => {io.sockets.emit('modifiedBlog',blog)})
@@ -244,7 +254,9 @@ app.delete("/blogs/:id", checkAuth, function(req, res) {
             cloudinary.uploader.destroy(blog.image.public_id,
                 {invalidate: true }, function(error, result) {console.log(result)})
             if(blog) {
-                blogDB.find().populate('author', 'username')
+                blogDB.find()
+                    .sort({created:-1})
+                    .populate('author', 'username')
                     .then((blogs) => io.sockets.emit('newBlog',blogs))
                 return res.status(200).json({
                     status: true,
