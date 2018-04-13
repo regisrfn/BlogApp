@@ -28,6 +28,9 @@ export default {
   comment (id, data) {
     return Api().post('blogs/' + id + '/comments', data)
   },
+  removeComment (idBlog, idComment) {
+    return Api().delete('blogs/' + idBlog + '/comments/' + idComment)
+  },
   getComment (id, data) {
     return Api().get('blogs/' + id + '/comments', data)
   }

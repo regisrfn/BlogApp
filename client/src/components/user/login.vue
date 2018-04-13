@@ -44,7 +44,7 @@ export default {
       database.login(user)
         .then(response => {
           const status = response.data.status
-          console.log(response.data)
+          // console.log(response.data)
           if (status) {
             const authData = {
               token: response.data.token,

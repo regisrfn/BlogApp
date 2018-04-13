@@ -11,6 +11,7 @@ import VueSocketio from 'vue-socket.io'
 Vue.use(VueSocketio, process.env.DATABASE_API)
 Vue.config.productionTip = false
 Vue.use(Vuelidate)
+Vue.use(require('vue-moment'))
 store.dispatch(types.TRY_OUT_LOGIN)
 
 /* eslint-disable no-new */

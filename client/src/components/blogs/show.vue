@@ -31,7 +31,10 @@
               v-for="comment in blogComments" :key="comment._id">
                   <div class="d-flex w-100 justify-content-between">
                       <h5 class="mb-1">{{comment.author.username}}</h5>
-                      <small>3 days ago</small>
+                      <small>{{comment.created | moment("from", "now")}}</small>
+                      <button class="buttonNone" v-if="isAuthor" v-on:click="removeComment(comment._id)">
+                        <i class="fas fa-trash-alt trash-icon"></i>
+                      </button>
                   </div>
                   <p class="mb-1">{{comment.text}}</p>
               </li>
@@ -59,8 +62,11 @@ export default {
       return this.$store.getters[types.BLOG]
     },
     blogComments () {
-      // console.log(this.$store.getters[types.BLOG])
+      // console.log(this.$store.getters[types.AUTHOR])
       return this.$store.getters[types.COMMENTS] || []
+    },
+    isAuthor () {
+      return this.$store.getters[types.BLOG].author._id === this.$store.getters[types.AUTHOR]
     }
   },
   created () {
@@ -91,7 +97,8 @@ export default {
           }
         })
         .catch(() => {
-          this.$router.push('/user/login')
+          toastr.warning('You are not the user of blog', 'Not Granted')
+          // this.$router.push('/user/login')
         })
     },
     comment () {
@@ -100,17 +107,15 @@ export default {
         author: this.$store.getters[types.AUTHOR]
       }
       database.comment(this.$route.params.id, {comment})
-        .then(response => {
-          const status = response.data.status
-          if (status) {
-            toastr.success('Commented on post')
-          } else {
-            toastr.warning('Error on comment post', 'Error!')
-          }
-        })
+        .then()
         .catch(() => {
           toastr.warning('Error on comment post', 'Error!')
         })
+    },
+    removeComment (id) {
+      database.removeComment(this.$route.params.id, id)
+        .then(() => toastr.success('Comment has been sucessfully removed.', 'Removed!'))
+        .catch(() => toastr.error('Error on delete comment', 'Error!'))
     },
     splitString (stringToSplit, separator, join) {
       var arrayOfStrings = stringToSplit.split(separator)
@@ -124,7 +129,11 @@ export default {
     modifiedBlog (blog) {
       this.$store.dispatch(types.setBlog, blog)
     },
-    modifiedComments (comments) {
+    createdComment (comments) {
+      toastr.success(comments[0].text, 'New comment!')
+      this.$store.dispatch(types.setComments, comments)
+    },
+    deletedComment (comments) {
       this.$store.dispatch(types.setComments, comments)
     }
   }
@@ -136,5 +145,14 @@ export default {
   border-left: 5px solid #00C851;
   padding: 15px;
 }
-
+.buttonNone{
+  background-color: transparent;
+  border: none;
+  border: hidden;
+  padding: 0;
+}
+.trash-icon:hover{
+  color: red;
+  font-size: 1.8rem;
+}
 </style>
