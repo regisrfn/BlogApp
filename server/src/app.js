@@ -214,7 +214,7 @@ app.post("/blogs/:id/comments", checkAuth, function(req, res) {
                         commentsDB.find({blog:req.params.id})
                             .sort({created:-1})
                             .populate('author', 'username')
-                            .then((comments) => io.sockets.emit('modifiedComments',comments))
+                            .then((comments) => io.sockets.emit('createdComment',comments))
                         return res.status(200).json({
                             status: true,
                         })
@@ -277,13 +277,33 @@ app.get("/blogs/:id/comments", function(req, res) {
         })
     
 })
-
+// delete comment
+app.delete("/blogs/:id/comments/:idComment", checkAuth, function(req, res) {
+    commentsDB.findOneAndRemove({author:req.headers.user, blog:req.params.id, _id:req.params.idComment})
+        .exec()
+        .then(() => {
+            commentsDB.find({blog:req.params.id})
+                            .sort({created:-1})
+                            .populate('author', 'username')
+                            .then((comments) => io.sockets.emit('deletedComment',comments))
+            return res.status(200).json({
+                status: true
+            })
+        })
+        .catch((error) => {
+            console.log(error)
+            return res.status(404).json({
+                status: false
+            })
+        })
+})
 
 // delete
 app.delete("/blogs/:id", checkAuth, function(req, res) {
     blogDB.findOneAndRemove({author:req.headers.user, _id:req.params.id})
         .exec()
         .then(blog => {
+            commentsDB.deleteMany({blog:req.params.id}).then()
             // DELETING FILE FROM CLOUDINARY
             cloudinary.uploader.destroy(blog.image.public_id,
                 {invalidate: true }, function(error, result) {console.log(result)})
