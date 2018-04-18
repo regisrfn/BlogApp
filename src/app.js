@@ -29,7 +29,11 @@ app.use(cors())
 app.use('/user', userRoutes)
 
 app.get('/blogs', function (req, res) {
-    blogDB.find()
+    var find = {} || req.body.find
+    var select = {} ||req.body.select
+
+    blogDB.find(find)
+    .select(select)
     .sort({created:-1})
     .populate('author', 'username')
     .exec()
@@ -49,13 +53,8 @@ app.get('/blogs', function (req, res) {
 })
 // CREATE
 app.post('/blogs', upload.single('blogImage'), checkAuth, function (req, res) {
-    const blog = {
-        title: req.body.title,
-        body: req.body.body,
-        author: req.body.author,
-        comments:req.body.comment
-    }
-    
+    const blog = JSON.parse(req.body.blog)  
+    // console.log(req.body)  
     try {
         cloudinary.uploader.upload(req.file.path, function(result) { 
             var image = {
@@ -117,10 +116,7 @@ app.get("/blogs/:id", function(req, res) {
 
 // EDIT
 app.put("/blogs/:id", upload.single('blogImage'), checkAuth, function(req, res) {
-    const blog = {
-        title: req.body.title,
-        body: req.body.body
-    }
+    const blog = JSON.parse(req.body.blog)
     const file = req.file
     if (file) {
         try {
@@ -209,6 +205,11 @@ app.post("/blogs/:id/comments", checkAuth, function(req, res) {
             if(blog){
                 var comment = req.body.comment
                 comment.blog = blog._id
+                comment.meta = {
+                    new:true
+                }
+                blog.meta.newComments++
+                blog.save() 
                 commentsDB.create(comment)
                     .then( () => {
                         commentsDB.find({blog:req.params.id})
@@ -277,6 +278,26 @@ app.get("/blogs/:id/comments", function(req, res) {
         })
     
 })
+// edit comment
+app.put("/blogs/:id/comments/:idComment", checkAuth, function(req, res) {
+    var comment = req.body.comment
+    // console.log(comment)
+    commentsDB.findOneAndUpdate({author:req.headers.user, blog:req.params.id, _id:req.params.idComment},
+    comment)
+        .exec()
+        .then(() => {
+            return res.status(200).json({
+                status: true
+            })
+        })
+        .catch((error) => {
+            console.log(error)
+            return res.status(404).json({
+                status: false
+            })
+        })
+})
+
 // delete comment
 app.delete("/blogs/:id/comments/:idComment", checkAuth, function(req, res) {
     commentsDB.findOneAndRemove({author:req.headers.user, blog:req.params.id, _id:req.params.idComment})
