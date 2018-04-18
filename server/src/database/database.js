@@ -8,6 +8,9 @@ var blogSchema = new mongoose.Schema({
     body:{ type: String, required: true},
     created: {type: Date, default:Date.now},
     author: {type: mongoose.Schema.Types.ObjectId, ref:'User', required: true},
+    meta: {
+        newComments: {type: Number, default:0, required: true}
+    }
 })
 
 var Blog = mongoose.model("Blog", blogSchema)
