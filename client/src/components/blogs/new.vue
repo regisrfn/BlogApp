@@ -53,13 +53,12 @@ export default {
   },
   methods: {
     submit () {
+      var blog = this.newBlog
+      blog.author = this.$store.getters[types.AUTHOR]
       this.isCreatingBlog = true
       var formData = new FormData()
       formData.append('blogImage', this.selectedFile)
-      formData.append('author', this.$store.getters[types.AUTHOR])
-      for (var key in this.newBlog) {
-        formData.append(key, this.newBlog[key])
-      }
+      formData.append('blog', JSON.stringify(blog))
       database.newBlog(formData)
         .then(response => {
           const status = response.data.status

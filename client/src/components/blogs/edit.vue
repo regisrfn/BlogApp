@@ -52,9 +52,7 @@ export default {
       if (this.selectedFile) {
         formData.append('blogImage', this.selectedFile)
       }
-      for (var key in this.blog) {
-        formData.append(key, this.blog[key])
-      }
+      formData.append('blog', JSON.stringify(this.blog))
       database.updateBlog(this.$route.params.id, formData)
         .then(response => {
           const status = response.data.status

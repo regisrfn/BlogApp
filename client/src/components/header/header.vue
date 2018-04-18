@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar fixed-top navbar-expand-sm navbar-dark bg-dark">
-  <router-link to="/" class="navbar-brand" href="#">
+  <router-link to="/" class="navbar-brand">
     <i class="fas fa-code fa-2x"></i>
   </router-link>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -10,13 +10,13 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <router-link class="nav-link" data-toggle="collapse" href="#navbarSupportedContent" role="button" aria-expanded="false" aria-controls="collapseExample"
+        <router-link class="nav-link" data-toggle="collapse" data-target="#navbarSupportedContent"
         to="/blogs">
-        Blogs <span class="sr-only">(current)</span>
+        Blogs
         </router-link>
       </li>
       <li class="nav-item">
-        <router-link class="nav-link" data-toggle="collapse" href="#navbarSupportedContent" role="button" aria-expanded="false" aria-controls="collapseExample"
+        <router-link class="nav-link" data-toggle="collapse"  data-target="#navbarSupportedContent"
         to="/blogs/new">
           New Blog
         </router-link>
@@ -26,13 +26,12 @@
     <ul class="navbar-nav">
       <template v-if="!username">
         <li class="nav-item">
-        <router-link class="nav-link" data-toggle="collapse" href="#navbarSupportedContent" role="button" aria-expanded="false" aria-controls="collapseExample"
-        to="/user/login">
+        <router-link class="nav-link" data-toggle="collapse"  data-target="#navbarSupportedContent" to="/user/login">
           Login
         </router-link>
       </li>
       <li class="nav-item">
-        <router-link class="nav-link" data-toggle="collapse" href="#navbarSupportedContent" role="button" aria-expanded="false" aria-controls="collapseExample"
+        <router-link class="nav-link" data-toggle="collapse"  data-target="#navbarSupportedContent"
         to="/user/signup">
           Sign Up
         </router-link>

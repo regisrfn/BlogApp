@@ -15,7 +15,11 @@
     <hr>
     <div class="card">
       <div class="card-header">
-        <h4 class="text-justify"><strong>Comments <i class="fas fa-comment"></i></strong></h4>
+        <div class="justify-content-between">
+          <h4>
+            <strong>Comments <i class="fas fa-comment"></i></strong>
+          </h4>
+        </div>
       </div>
       <div class="card-body">
         <div class="comments form-group text-justify card">
@@ -28,11 +32,13 @@
           <h5 v-else> {{blogComments.length}} comments</h5>
           <ul class="list-group">
               <li class="list-group-item list-group-item-action flex-column align-items-start"
+              v-on:click="editComment(comment)"
+              :class="{newComment:isAuthor(blog.author._id) & comment.meta.new}"
               v-for="comment in blogComments" :key="comment._id">
                   <div class="d-flex w-100 justify-content-between">
                       <h5 class="mb-1">{{comment.author.username}}</h5>
                       <small>{{comment.created | moment("from", "now")}}</small>
-                      <button class="buttonNone" v-if="isAuthor" v-on:click="removeComment(comment._id)">
+                      <button id="trash-button" class="buttonNone" v-if="isAuthor(comment.author._id)" v-on:click="removeComment(comment._id)">
                         <i class="fas fa-trash-alt trash-icon"></i>
                       </button>
                   </div>
@@ -64,9 +70,6 @@ export default {
     blogComments () {
       // console.log(this.$store.getters[types.AUTHOR])
       return this.$store.getters[types.COMMENTS] || []
-    },
-    isAuthor () {
-      return this.$store.getters[types.BLOG].author._id === this.$store.getters[types.AUTHOR]
     }
   },
   created () {
@@ -112,6 +115,12 @@ export default {
           toastr.warning('Error on comment post', 'Error!')
         })
     },
+    editComment (comment) {
+      if (this.isAuthor(this.blog.author._id)) {
+        comment.meta.new = false
+        database.editComment(this.$route.params.id, comment._id, {comment}).then()
+      }
+    },
     removeComment (id) {
       database.removeComment(this.$route.params.id, id)
         .then(() => toastr.success('Comment has been sucessfully removed.', 'Removed!'))
@@ -120,6 +129,16 @@ export default {
     splitString (stringToSplit, separator, join) {
       var arrayOfStrings = stringToSplit.split(separator)
       return arrayOfStrings.join(join)
+    },
+    isAuthor (author) {
+      return this.$store.getters[types.AUTHOR] === author
+    },
+    resetNewComments () {
+      var blog = this.blog
+      blog.meta.newComments = 0
+      var formData = new FormData()
+      formData.append('blog', JSON.stringify(blog))
+      database.updateBlog(this.$route.params.id, formData)
     }
   },
   sockets: {
@@ -151,8 +170,15 @@ export default {
   border: hidden;
   padding: 0;
 }
-.trash-icon:hover{
+#trash-button:hover{
   color: red;
   font-size: 1.8rem;
 }
+.newComment {
+  background-color:  rgba(17, 218, 10, 0.205);
+}
+.newComment:hover {
+  background-color:  rgba(72, 221, 58, 0.527);
+}
+
 </style>
