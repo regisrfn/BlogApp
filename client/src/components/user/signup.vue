@@ -75,9 +75,7 @@ export default {
                         token: response.data.token,
                         username: response.data.username
                     }
-                    localStorage.setItem('token', authData.token)
-                    localStorage.setItem('username', authData.username)
-                    this.$store.dispatch(types.SET_AUTH_DATA, authData)
+                    this.router.push('/user/login')
                 }
             } else {
                 toastr.error('Please fill up all the fields.', 'Empty Fields!')

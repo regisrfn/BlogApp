@@ -44,16 +44,21 @@ export default {
       database.login(user)
         .then(response => {
           const status = response.data.status
-          // console.log(response.data)
+          console.log(response.data)
           if (status) {
             const authData = {
               token: response.data.token,
               username: response.data.username,
               author: response.data.author
             }
+
+            const now = new Date()
+            const expiresIn = new Date(now.getTime() + response.data.expiresIn * 1000)
             localStorage.setItem('token', authData.token)
             localStorage.setItem('username', authData.username)
             localStorage.setItem('author', authData.author)
+            localStorage.setItem('expiresIn', expiresIn)
+
             this.$store.dispatch(types.SET_AUTH_DATA, authData)
             window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
           }

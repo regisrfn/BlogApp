@@ -1,4 +1,5 @@
 import * as types from '../types'
+import toastr from 'toastr'
 
 export default {
   state: {
@@ -33,8 +34,16 @@ export default {
       if (!token) {
         return
       }
+      const expiresIn = new Date(localStorage.getItem('expiresIn'))
+      const now = new Date()
+      if (now >= expiresIn) {
+        dispatch(types.LOGOUT)
+        toastr.warning('Error on login', 'Error')
+        return
+      }
       const username = localStorage.getItem('username')
       const author = localStorage.getItem('author')
+
       dispatch(types.SET_AUTH_DATA, {token, username, author})
     },
     [types.LOGOUT] ({commit}) {
@@ -42,6 +51,11 @@ export default {
       localStorage.removeItem('token')
       localStorage.removeItem('userId')
       localStorage.removeItem('author')
+    },
+    [types.setLogoutTimer] ({dispatch}, expiration) {
+      setTimeout(() => {
+        dispatch(types.LOGOUT)
+      }, expiration * 1000)
     }
   },
   getters: {
