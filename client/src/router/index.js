@@ -7,10 +7,12 @@ import NewBlog from '../components/blogs/new.vue'
 import ShowBlog from '../components/blogs/show.vue'
 import editBlog from '../components/blogs/edit.vue'
 import user from '../components/user/user.vue'
+import Perfil from '../components/user/perfil.vue'
 import login from '../components/user/login.vue'
 import signup from '../components/user/signup.vue'
 import store from '../store/store'
 import * as types from '../store/types'
+import toastr from 'toastr'
 
 Vue.use(Router)
 
@@ -38,6 +40,7 @@ export default new Router({
             if (store.getters[types.TOKEN]) {
               next()
             } else {
+              toastr.warning('Please sign in', 'Login')
               next('/user/login')
             }
           }
@@ -57,6 +60,7 @@ export default new Router({
             if (store.getters[types.TOKEN] && (actualAuthor === blogAuthor)) {
               next()
             } else {
+              toastr.warning('Please sign in', 'Login')
               next('/user/login')
             }
           }
@@ -76,6 +80,19 @@ export default new Router({
           path: 'signup',
           name: 'signup',
           component: signup
+        },
+        {
+          path: ':id',
+          name: 'user',
+          component: Perfil,
+          beforeEnter: (to, from, next) => {
+            if (store.getters[types.TOKEN]) {
+              next()
+            } else {
+              toastr.warning('Please sign in', 'Login')
+              next('/user/login')
+            }
+          }
         }
       ]
     }

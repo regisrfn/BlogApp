@@ -59,9 +59,6 @@ export default {
           if (status) {
             toastr.success('Blog has been modified sucessufully.', 'EDITED!')
             this.$router.push('/blogs/' + this.$route.params.id)
-          } else {
-            this.isUploadingBlog = false
-            toastr.warning('Error updating blog', 'Error')
           }
         })
         .catch(() => {

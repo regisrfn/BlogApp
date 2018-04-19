@@ -7,8 +7,10 @@
       <div class="card-body">
         <h5 class="card-title">{{blog.title}}</h5>
         <p v-html="blog.body" class="card-text text-justify"></p>
-        <router-link :to="{name:'editBlog'}" class="btn btn-primary">EDIT</router-link>
-        <button v-on:click="remove" class="btn btn-danger">DELETE</button>
+        <template v-if="isAuthor(blog.author._id)">
+          <router-link :to="{name:'editBlog'}" class="btn btn-primary">EDIT</router-link>
+          <button v-on:click="remove" class="btn btn-danger">DELETE</button>
+        </template>
       </div>
     </div>
     <hr>
@@ -100,7 +102,8 @@ export default {
           }
         })
         .catch(() => {
-          toastr.warning('You are not the user of blog', 'Not Granted')
+          this.$router.push('/user/login')
+          toastr.warning('You are not the user blog', 'Error')
           // this.$router.push('/user/login')
         })
     },
