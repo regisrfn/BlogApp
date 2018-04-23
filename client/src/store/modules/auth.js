@@ -1,5 +1,4 @@
 import * as types from '../types'
-import toastr from 'toastr'
 
 export default {
   state: {
@@ -38,7 +37,6 @@ export default {
       const now = new Date()
       if (now >= expiresIn) {
         dispatch(types.LOGOUT)
-        toastr.warning('Error on login', 'Error')
         return
       }
       const username = localStorage.getItem('username')

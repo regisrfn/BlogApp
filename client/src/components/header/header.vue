@@ -42,10 +42,9 @@
           {{username}}
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" v-on:click="logout">Logout</a>
-          <a class="dropdown-item" >Another action</a>
+          <router-link :to='"/user/" + $store.getters["AUTHOR"]' class="dropdown-item">Perfil</router-link>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item">Something else here</a>
+          <a class="dropdown-item" v-on:click="logout">Logout</a>
         </div>
       </li>
     </ul>
@@ -74,4 +73,5 @@ export default {
 .navbar {
   padding: 0rem 1rem;
 }
+
 </style>

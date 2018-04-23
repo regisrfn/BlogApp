@@ -1,3 +1,4 @@
+export * from './typesUserPage'
 // getters
 export const BLOGS = 'BLOGS'
 export const BLOG = 'BLOG'

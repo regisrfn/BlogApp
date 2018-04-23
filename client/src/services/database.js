@@ -36,5 +36,12 @@ export default {
   },
   getComment (id, data) {
     return Api().get('blogs/' + id + '/comments', data)
+  },
+  // USER PAGE
+  getUserPage (id) {
+    return Api().get('user/' + id)
+  },
+  editUserPage (id, user) {
+    return Api().put('user/' + id, user)
   }
 }
