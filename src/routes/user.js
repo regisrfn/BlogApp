@@ -53,6 +53,42 @@ router.post('/', (req, res) => {
         })
     
 })
+//EDIT USER
+router.put('/:id', (req, res) => {
+    console.log(req.body)
+    const user = req.body
+    User.findByIdAndUpdate(req.params.id, user)
+        .exec()
+        .then(user => {
+            return res.status(200).json({
+                status:true
+            })
+        })
+        .catch(err => {
+            console.log(err)
+            return res.status(404).json({
+                message: "User not found"
+            })
+        })
+})
+
+//GET USER
+router.get('/:id', (req, res) => {
+    User.findById(req.params.id)
+        .select('-password')
+        .exec()
+        .then(user => {
+            return res.status(200).json({
+                user
+            })
+        })
+        .catch(err => {
+            console.log(err)
+            return res.status(404).json({
+                message: "User not found"
+            })
+        })
+})
 //LOGIN
 router.post('/login', (req, res) => {
     User.find({email: req.body.email})
