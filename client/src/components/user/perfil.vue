@@ -7,7 +7,7 @@
             <div class="col-sm-12 col-md-4">
                 <img :src='user.image.url'  class="img-thumbnail">
                 <div class="text-justify">
-                    <h2>{{user.firstName}} {{user.lastName}}</h2>
+                    <h2>{{user.name}}</h2>
                     <h5> Description </h5>
                     <p>
                         Proin gravida urna id ultrices eleifend. Nullam justo augue, scelerisque et elementum a, bibendum ut risus. Cras efficitur pulvinar tortor, vel placerat massa. Cras ac finibus nulla, vel ornare ante.

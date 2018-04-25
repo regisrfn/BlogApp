@@ -2,42 +2,25 @@
 <div>
     <div class="d-flex justify-content-between">
         <h2 class="mb-0"> <i class="fas fa-user mr-3"></i>ABOUT</h2>
-        <button class="btn btn-success" v-if="!editON" v-on:click=" editON = !editON">Edit</button>
-        <button class="btn btn-success" v-if="editON" v-on:click="submit">Save</button>
+        <button class="btn btn-success" v-if="!editON" v-on:click="editON = !editON">Edit</button>
+        <div v-else>
+            <button class="btn btn-success"  v-on:click="submit">Save</button>
+            <button class="btn btn-warning"  v-on:click="editON = !editON">Cancel</button>
+        </div>
     </div>
     <div class="content text-justify">
         <div class="row" v-if="!editON">
-            <div class="col-md-6">
-                <h5> <strong>Name:</strong>{{user.firstName}} {{user.lastName}}</h5>
-                <h5> <strong>Username: </strong>{{user.username}}</h5>
-                <h5> <strong>City:</strong> {{user.city}}</h5>
-                <h5> <strong>Country:</strong> {{user.country}}</h5>
-                <h5> <strong>Birthday:</strong> {{user.birthday}}</h5>
-            </div>
-            <div class="col-md-6">
-                <h5> <strong>Phone:</strong>{{user.phone}}</h5>
-                <h5> <strong>Interests:</strong>{{user.interests}}</h5>
-                <h5> <strong>Email: </strong>{{user.email}}</h5>
-                <h5> <strong>Website:</strong>{{user.website}}</h5>
-            </div>
+            <h5 v-for="(item,index) in keys" :key="index"
+            class="d-flex col-md-6">
+                <strong class="mr-1">{{item}}: </strong>{{user[item.toLowerCase()]}}
+            </h5>
         </div>
         <div class="row" v-else>
-            <div class="col-md-6">
-                <h5 class="d-flex"> <strong class="mr-1">Name: </strong> <input class="form-control" v-model="user.firstName"></h5>
-                <h5 class="d-flex"> <strong>Username: </strong> <input class="form-control" v-model="user.username"></h5>
-                <h5 class="d-flex"> <strong>City: </strong><input class="form-control"
-                v-model="user.email"></h5>
-                <h5 class="d-flex"><strong>Country: </strong><input class="form-control"
-                v-model="user.country"></h5>
-                <h5 class="d-flex"><strong>Birthday: </strong><input class="form-control" v-model="user.birthday">
-                </h5>
-            </div>
-            <div class="col-md-6">
-                <h5 class="d-flex"> <strong>Phone: </strong><input class="form-control"   v-model="user.phone"></h5>
-                <h5 class="d-flex"> <strong>Interests: </strong><input class="form-control" v-model="user.interests"></h5>
-                <h5 class="d-flex"> <strong>Email:</strong><input class="form-control" v-model="user.email"></h5>
-                <h5 class="d-flex"> <strong>Website: </strong><input class="form-control" v-model="user.website"></h5>
-            </div>
+            <h5 v-for="(item,index) in keys" :key="index"
+            class="d-flex col-md-6">
+                <strong class="mr-1">{{item}}</strong>
+                <input class="form-control" v-model="user[item.toLowerCase()]">
+            </h5>
         </div>
     </div>
     <hr>
@@ -56,7 +39,8 @@ export default {
   data  () {
     return {
       editON: false,
-      newUser: {}
+      newUser: {},
+      keys: ['Name', 'Username', 'City', 'Country', 'Birthday', 'Phone', 'Interests', 'Email', 'Website']
     }
   },
   computed: {
