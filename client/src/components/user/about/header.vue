@@ -5,12 +5,13 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" v-on:click="$emit('input', 'profile')">
+      <li class="nav-item">
+        <a :class="{active : isActive === 'profile' }" v-on:click="$emit('input', 'profile')" @click="isActive = 'profile'" class="nav-link">
           Profile <span class="sr-only">(current)</span>
         </a>
       </li>
-      <li class="nav-item">
+      <li :class="{active : isActive === 'blogs' }" @click="isActive = 'blogs'"
+      class="nav-item">
         <a class="nav-link" v-on:click="$emit('input', 'blogs')">Blogs</a>
       </li>
       <li class="nav-item">
@@ -23,3 +24,20 @@
   </div>
 </nav>
 </template>
+
+<script>
+export default {
+  data () {
+    return {
+      class: ['profile', 'photos'],
+      isActive: 'profile'
+    }
+  }
+}
+</script>
+
+<style scoped>
+.active {
+  background-color: greenyellow;
+}
+</style>

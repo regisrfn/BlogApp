@@ -1,8 +1,9 @@
 import Api from '../services/API'
 
 export default {
-  getAllBlogs () {
-    return Api().get('blogs')
+  getAllBlogs (data) {
+    console.log(data)
+    return Api().get('blogs', {params: data})
   },
   newBlog (newBlog) {
     return Api().post('blogs', newBlog)

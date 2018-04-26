@@ -17,6 +17,9 @@
                     <i class="fas fa-list fa-2x"></i>
                     BLOGS
                 </div>
+                <div class="list-group">
+                  <router-link :to="{ name: 'showBlog', params: { id: blog._id }}" v-for="blog in userBlogs" :key="blog._id" class="list-group-item list-group-item-action">{{blog.title}}</router-link>
+                </div>
             </div>
             <div class="col-sm-12 col-md-8">
                 <header-about v-on:input="currentTab = $event" class="mb-3"></header-about>
@@ -52,6 +55,9 @@ export default {
     },
     user () {
       return this.$store.getters[types.USER_PAGE]
+    },
+    userBlogs () {
+      return this.$store.getters[types.USER_BLOGS]
     }
   },
   created () {
