@@ -29,11 +29,12 @@ app.use(cors())
 app.use('/user', userRoutes)
 
 app.get('/blogs', function (req, res) {
-    var find = {} || req.body.find
-    var select = {} ||req.body.select
-
+    var find = {}
+    if(req.query.author){
+        find.author = req.query.author
+    }
+    console.log(find)
     blogDB.find(find)
-    .select(select)
     .sort({created:-1})
     .populate('author', 'username')
     .exec()
