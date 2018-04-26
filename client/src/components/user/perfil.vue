@@ -1,11 +1,12 @@
 <template>
     <div v-if="user">
-        <div id="header" class="header-style row">
+        <div id="header" class="header-style">
             <h1>User Profile Page</h1>
         </div>
-        <div class="body row">
+        <div class="container">
+          <div class="body row">
             <div class="col-sm-12 col-md-4">
-                <div class="card-left">
+                <div class="card-left bg-light">
                   <img :src='user.image.url'  class="img-thumbnail">
                   <div class="text-justify">
                       <h2>{{user.name}}</h2>
@@ -27,11 +28,12 @@
                 <header-about v-on:input="currentTab = $event" class="mb-3 header-about"></header-about>
                 <!-- Inactive components will be cached! -->
                 <keep-alive>
-                    <component v-bind:is="currentTabComponent" class="pt-3 bg-light container"></component>
+                    <component v-bind:is="currentTabComponent" class="pt-3 bg-light"></component>
                 </keep-alive>
             </div>
         </div>
-</div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -70,7 +72,8 @@ export default {
 
 <style scoped>
 .header-style{
-  background-color: #eaeaea
+  background-color: #eaeaea;
+  text-align: center;
 }
 .card-left {
   border-top: 3px solid greenyellow;
@@ -78,8 +81,7 @@ export default {
 .body {
   background-color: rgba(235, 228, 228, 0.507);
 }
-
-.header-about {
-  background-color: forestgreen;
+h1{
+  margin-bottom: 0px;
 }
 </style>
