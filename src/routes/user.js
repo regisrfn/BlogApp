@@ -4,6 +4,7 @@ const User = require("../database/user/user")
 const mongoose = require("mongoose")
 const bcrypt = require("bcrypt")
 const jwt = require('jsonwebtoken')
+const checkAuth = require('../middleware/chechAuth')
 
 //CREATE
 router.post('/', (req, res) => {
@@ -54,8 +55,7 @@ router.post('/', (req, res) => {
     
 })
 //EDIT USER
-router.put('/:id', (req, res) => {
-    console.log(req.body)
+router.put('/:id', checkAuth, (req, res) => {
     const user = req.body
     User.findByIdAndUpdate(req.params.id, user)
         .exec()
