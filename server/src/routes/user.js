@@ -56,7 +56,6 @@ router.post('/', (req, res) => {
 })
 //EDIT USER
 router.put('/:id', checkAuth, (req, res) => {
-    console.log(req.body)
     const user = req.body
     User.findByIdAndUpdate(req.params.id, user)
         .exec()

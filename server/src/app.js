@@ -33,7 +33,7 @@ app.get('/blogs', function (req, res) {
     if(req.query.author){
         find.author = req.query.author
     }
-    console.log(find)
+    // console.log(find)
     blogDB.find(find)
     .sort({created:-1})
     .populate('author', 'username')
