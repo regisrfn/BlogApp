@@ -55,7 +55,8 @@ export default {
       database.editUserPage(this.$store.getters[types.AUTHOR], this.user)
         .then()
         .catch(() => {
-          toastr.warning('Error on login', 'Error')
+          toastr.warning('Please sign in', 'Login')
+          next('/user/login')
         })
     }
   }
