@@ -5,7 +5,7 @@
         <button class="btn btn-success" v-if="!editON" v-on:click="editON = !editON">Edit</button>
         <div v-else>
             <button class="btn btn-success"  v-on:click="submit">Save</button>
-            <button class="btn btn-warning"  v-on:click="editON = !editON">Cancel</button>
+            <button class="btn btn-warning"  v-on:click="cancel">Cancel</button>
         </div>
     </div>
     <hr>
@@ -34,7 +34,7 @@
 <script>
 import * as types from '../../../store/types.js'
 import database from '../../../services/database.js'
-import toastr from 'toastr'
+// import toastr from 'toastr'
 
 export default {
   data  () {
@@ -55,9 +55,12 @@ export default {
       database.editUserPage(this.$store.getters[types.AUTHOR], this.user)
         .then()
         .catch(() => {
-          toastr.warning('Please sign in', 'Login')
-          next('/user/login')
+          this.$router.push('/user/login')
         })
+    },
+    cancel () {
+      this.editON = !this.editON
+      this.$store.dispatch(types.initUserPage, this.$route.params.id)
     }
   }
 }

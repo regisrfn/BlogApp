@@ -69,7 +69,7 @@ export default {
                 }
                 const response = await database.signup(user)
                 const status = response.data.status
-                console.log(response.data)
+                // console.log(response.data)
                 if (status) {
                     const authData = {
                         token: response.data.token,

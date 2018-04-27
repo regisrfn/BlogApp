@@ -2,7 +2,6 @@ import Api from '../services/API'
 
 export default {
   getAllBlogs (data) {
-    console.log(data)
     return Api().get('blogs', {params: data})
   },
   newBlog (newBlog) {

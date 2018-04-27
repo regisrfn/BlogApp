@@ -43,9 +43,7 @@ export default {
   created () {
     this.isConnectingUser = true
     database.checkToken(this.$store.getters[types.TOKEN])
-      .then(response => {
-        console.log(response.data)
-      })
+      .then()
       .catch(() => {
         this.$router.push('/user/login')
         // this.$store.dispatch(types.LOGOUT)
