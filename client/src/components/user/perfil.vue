@@ -1,13 +1,13 @@
 <template>
     <div v-if="user">
-        <div id="header" class="header-style">
+        <div id="header" class="header-style bg-green">
             <h1>User Profile Page</h1>
         </div>
         <div class="container">
           <div class="body row">
             <div class="col-sm-12 col-md-4">
-                <div class="card-left bg-light">
-                  <img :src='user.image.url'  class="img-thumbnail">
+                <img :src='user.image.url'  class="img-thumbnail card-left">
+                <div class="bg-light container">
                   <div class="text-justify">
                       <h2>{{user.name}}</h2>
                       <h5> Description </h5>
@@ -15,6 +15,7 @@
                           Proin gravida urna id ultrices eleifend. Nullam justo augue, scelerisque et    elementum a, bibendum ut risus. Cras efficitur pulvinar tortor, vel placerat massa.    Cras ac finibus nulla, vel ornare ante.
                       </p>
                   </div>
+                  <hr>
                   <div class="blogs d-flex justify-content-between">
                       <i class="fas fa-list fa-2x"></i>
                       BLOGS
@@ -25,7 +26,7 @@
               </div>
             </div>
             <div class="col-sm-12 col-md-8">
-                <header-about v-on:input="currentTab = $event" class="mb-3 header-about"></header-about>
+                <header-about v-on:input="currentTab = $event" class="mt-3 header-about py-0"></header-about>
                 <!-- Inactive components will be cached! -->
                 <keep-alive>
                     <component v-bind:is="currentTabComponent" class="bg-light"></component>
@@ -84,4 +85,5 @@ export default {
 h1{
   margin-bottom: 0px;
 }
+
 </style>

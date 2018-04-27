@@ -9,7 +9,7 @@
         </div>
     </div>
     <hr>
-    <div class="text-justify">
+    <div class="text-left">
         <div class="row" v-if="!editON">
             <h5 v-for="(item,index) in keys" :key="index"
             class="col-md-6">

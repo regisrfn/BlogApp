@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-sm navbar-light bg-light">
+  <nav class="navbar navbar-expand-sm navbar-light bg-green">
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -38,7 +38,13 @@ export default {
 
 <style scoped>
 .active {
-  background-color: greenyellow;
+  background-color: rgb(72, 248, 48);
 }
 
+.bg-green{
+  background-color: rgba(144, 230, 17, 0.507)
+}
+a{
+  cursor: pointer;
+}
 </style>
