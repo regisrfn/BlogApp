@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="container pt-3">
     <div class="d-flex justify-content-between">
         <h2 class="mb-0"> <i class="fas fa-user mr-3"></i>ABOUT</h2>
         <button class="btn btn-success" v-if="!editON" v-on:click="editON = !editON">Edit</button>
@@ -8,16 +8,17 @@
             <button class="btn btn-warning"  v-on:click="editON = !editON">Cancel</button>
         </div>
     </div>
-    <div class="content text-justify">
+    <hr>
+    <div class="text-justify">
         <div class="row" v-if="!editON">
             <h5 v-for="(item,index) in keys" :key="index"
-            class="d-flex col-md-6">
+            class="col-md-6">
                 <strong class="mr-1">{{item}}: </strong>{{user[item.toLowerCase()]}}
             </h5>
         </div>
         <div class="row" v-else>
             <h5 v-for="(item,index) in keys" :key="index"
-            class="d-flex col-md-6">
+            class="col-md-6">
                 <strong class="mr-1">{{item}}</strong>
                 <input class="form-control" v-model="user[item.toLowerCase()]">
             </h5>

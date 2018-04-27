@@ -28,7 +28,7 @@
                 <header-about v-on:input="currentTab = $event" class="mb-3 header-about"></header-about>
                 <!-- Inactive components will be cached! -->
                 <keep-alive>
-                    <component v-bind:is="currentTabComponent" class="pt-3 bg-light"></component>
+                    <component v-bind:is="currentTabComponent" class="bg-light"></component>
                 </keep-alive>
             </div>
         </div>
