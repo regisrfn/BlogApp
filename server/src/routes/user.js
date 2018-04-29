@@ -5,6 +5,7 @@ const mongoose = require("mongoose")
 const bcrypt = require("bcrypt")
 const jwt = require('jsonwebtoken')
 const checkAuth = require('../middleware/chechAuth')
+const upload = require('../models/multer')
 
 //CREATE
 router.post('/', (req, res) => {
@@ -55,9 +56,11 @@ router.post('/', (req, res) => {
     
 })
 //EDIT USER
-router.put('/:id', checkAuth, (req, res) => {
+router.put('/:id', upload.single('blogImage'), checkAuth, (req, res) => {
     const user = req.body
-    User.findByIdAndUpdate(req.params.id, user)
+    const file = req.file
+    if(!file){
+        User.findByIdAndUpdate(req.params.id, user)
         .exec()
         .then(user => {
             return res.status(200).json({
@@ -70,6 +73,9 @@ router.put('/:id', checkAuth, (req, res) => {
                 message: "User not found"
             })
         })
+    } else if (file) {
+        console.log(file)
+    }
 })
 
 //GET USER
