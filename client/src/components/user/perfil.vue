@@ -6,7 +6,10 @@
         <div class="container">
           <div class="body row">
             <div class="col-sm-12 col-md-4">
-                <img :src='user.image.url'  class="img-thumbnail card-left">
+                <div>
+                  <img :src='user.image.url'  class="img-thumbnail card-left">
+                  <input @change="onFileChanged" type="file">
+                </div>
                 <div class="bg-light container">
                   <div class="text-justify">
                       <h2>{{user.name}}</h2>
@@ -42,11 +45,14 @@ import headerAbout from './about/header'
 import profile from './about/Profile'
 import blogs from './about/Blogs'
 import * as types from '../../store/types.js'
+import database from '../../services/database.js'
 
 export default {
   data () {
     return {
-      currentTab: 'profile'
+      currentTab: 'profile',
+      isMouseOver: false,
+      selectedFile: null
     }
   },
   components: {
@@ -67,6 +73,18 @@ export default {
   },
   created () {
     this.$store.dispatch(types.initUserPage, this.$route.params.id)
+  },
+  methods: {
+    onFileChanged (event) {
+      this.selectedFile = event.target.files[0]
+      var formData = new FormData()
+      formData.append('blogImage', this.selectedFile)
+      formData.append('user', JSON.stringify(this.user))
+
+      database.editUserPage(this.$store.getters[types.AUTHOR], formData)
+        .then()
+        .catch()
+    }
   }
 }
 </script>
