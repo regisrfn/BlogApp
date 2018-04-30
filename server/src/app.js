@@ -62,7 +62,7 @@ app.post('/blogs', upload.single('blogImage'), checkAuth, function (req, res) {
                 url: result.secure_url,
                 public_id: result.public_id
             }
-            console.log(image.url)
+            // console.log(image.url)
             blog.image = image
             blogDB.create(blog)
                 .then((blogs) => {

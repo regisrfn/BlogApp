@@ -82,7 +82,10 @@ export default {
       formData.append('user', JSON.stringify(this.user))
 
       database.editUserPage(this.$store.getters[types.AUTHOR], formData)
-        .then()
+        .then(response => {
+          console.log(response.data.user)
+          this.$store.dispatch(types.initUserPage, this.$route.params.id)
+        })
         .catch()
     }
   }
