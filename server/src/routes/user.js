@@ -68,10 +68,16 @@ router.put('/:id', upload.single('blogImage'), checkAuth, (req, res) => {
                     url: result.secure_url,
                     public_id: result.public_id
                 }
+                
                 //console.log(image.url)
                 User.findByIdAndUpdate(req.params.id, {$set: {image: image}})
                 .exec()
                 .then(user => {
+                    if (user.image.public_id !== 'greyson-joralemon-257251-unsplash') {
+                        // DELETING FILE FROM CLOUDINARY
+                        cloudinary.uploader.destroy(user.image.public_id,
+                        {invalidate: true }, function(error, result) {console.log(result)})
+                    }
                     return res.status(200).json({
                         status:true
                     })

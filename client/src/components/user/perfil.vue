@@ -6,9 +6,16 @@
         <div class="container">
           <div class="body row">
             <div class="col-sm-12 col-md-4">
-                <div>
-                  <img :src='user.image.url'  class="img-thumbnail card-left">
-                  <input @change="onFileChanged" type="file">
+                <div @mouseover="isMouseOver=true" class="col px-0">
+                  <div @mouseout="isMouseOver=false"
+                  v-if="isMouseOver" class="overlap d-flex">
+                    <label for="file-upload" class="custom-file-upload">
+                      <i class="fa fa-edit"></i> Choose Image
+                    </label>
+                    <input @change="onFileChanged"
+                    id="file-upload" type="file"/>
+                  </div>
+                  <img :src="splitString(user.image.url,'upload/','upload/q_auto/')"  class="img-thumbnail card-left">
                 </div>
                 <div class="bg-light container">
                   <div class="text-justify">
@@ -83,10 +90,13 @@ export default {
 
       database.editUserPage(this.$store.getters[types.AUTHOR], formData)
         .then(response => {
-          console.log(response.data.user)
           this.$store.dispatch(types.initUserPage, this.$route.params.id)
         })
         .catch()
+    },
+    splitString (stringToSplit, separator, join) {
+      var arrayOfStrings = stringToSplit.split(separator)
+      return arrayOfStrings.join(join)
     }
   }
 }
@@ -106,5 +116,27 @@ export default {
 h1{
   margin-bottom: 0px;
 }
+.overlap {
+  width: 100%;
+  height: 100%;
+  position:absolute;
+  overflow: hidden;
+}
+.overlap {
+  z-index: 1;
+  background-color: rgba(240, 233, 233, 0.356);
+}
 
+input[type="file"] {
+    display: none;
+}
+.custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.37);
+}
 </style>
