@@ -33,7 +33,7 @@ app.get('/blogs', function (req, res) {
     if(req.query.author){
         find.author = req.query.author
     }
-    console.log(find)
+    // console.log(find)
     blogDB.find(find)
     .sort({created:-1})
     .populate('author', 'username')
@@ -62,7 +62,7 @@ app.post('/blogs', upload.single('blogImage'), checkAuth, function (req, res) {
                 url: result.secure_url,
                 public_id: result.public_id
             }
-            console.log(image.url)
+            // console.log(image.url)
             blog.image = image
             blogDB.create(blog)
                 .then((blogs) => {

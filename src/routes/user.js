@@ -5,6 +5,8 @@ const mongoose = require("mongoose")
 const bcrypt = require("bcrypt")
 const jwt = require('jsonwebtoken')
 const checkAuth = require('../middleware/chechAuth')
+const upload = require('../models/multer')
+const cloudinary = require('../cloudinary/cloud')
 
 //CREATE
 router.post('/', (req, res) => {
@@ -55,9 +57,41 @@ router.post('/', (req, res) => {
     
 })
 //EDIT USER
-router.put('/:id', checkAuth, (req, res) => {
+router.put('/:id', upload.single('blogImage'), checkAuth, (req, res) => {
     const user = req.body
-    User.findByIdAndUpdate(req.params.id, user)
+    const file = req.file
+
+    if (file) {    
+        cloudinary.uploader.upload(req.file.path,
+            function(result) {
+                var image = {
+                    url: result.secure_url,
+                    public_id: result.public_id
+                }
+                
+                //console.log(image.url)
+                User.findByIdAndUpdate(req.params.id, {$set: {image: image}})
+                .exec()
+                .then(user => {
+                    if (user.image.public_id !== 'greyson-joralemon-257251-unsplash') {
+                        // DELETING FILE FROM CLOUDINARY
+                        cloudinary.uploader.destroy(user.image.public_id,
+                        {invalidate: true }, function(error, result) {console.log(result)})
+                    }
+                    return res.status(200).json({
+                        status:true
+                    })
+                })
+                .catch(err => {
+                    console.log(err)
+                    return res.status(404).json({
+                        message: "User not found"
+                    })
+                })
+        })
+    } else {
+        //console.log(image.url)
+        User.findByIdAndUpdate(req.params.id, user)
         .exec()
         .then(user => {
             return res.status(200).json({
@@ -70,6 +104,7 @@ router.put('/:id', checkAuth, (req, res) => {
                 message: "User not found"
             })
         })
+    }
 })
 
 //GET USER
