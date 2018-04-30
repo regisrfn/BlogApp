@@ -6,17 +6,26 @@
         <div class="container">
           <div class="body row">
             <div class="col-sm-12 col-md-4">
-                <div @mouseover="isMouseOver=true" class="col px-0">
-                  <div @mouseout="isMouseOver=false"
-                  v-if="isMouseOver" class="overlap d-flex">
-                    <label for="file-upload" class="custom-file-upload">
+                <!-- image -->
+                <div @mouseenter="isMouseOver=true" class="col-sm-12 px-0">
+                  <!-- image overlaping if mouse is over-->
+                  <div @mouseleave="isMouseOver=false"
+                  v-if="isMouseOver" class="overlap">
+                    <div v-if="isUploadingImage">
+                      <div class="loader"></div>
+                      <h3 class="text-white">Loading ...</h3>
+                    </div>
+                    <div v-else class="d-flex justify-content-center">
+                      <label for="file-upload" class="custom-file-upload">
                       <i class="fa fa-edit"></i> Choose Image
                     </label>
                     <input @change="onFileChanged"
                     id="file-upload" type="file"/>
+                    </div>
                   </div>
                   <img :src="splitString(user.image.url,'upload/','upload/q_auto/')"  class="img-thumbnail card-left">
                 </div>
+
                 <div class="bg-light container">
                   <div class="text-justify">
                       <h2>{{user.name}}</h2>
@@ -59,7 +68,8 @@ export default {
     return {
       currentTab: 'profile',
       isMouseOver: false,
-      selectedFile: null
+      selectedFile: null,
+      isUploadingImage: false
     }
   },
   components: {
@@ -83,7 +93,9 @@ export default {
   },
   methods: {
     onFileChanged (event) {
+      this.isUploadingImage = true
       this.selectedFile = event.target.files[0]
+      console.log(event)
       var formData = new FormData()
       formData.append('blogImage', this.selectedFile)
       formData.append('user', JSON.stringify(this.user))
@@ -91,8 +103,11 @@ export default {
       database.editUserPage(this.$store.getters[types.AUTHOR], formData)
         .then(response => {
           this.$store.dispatch(types.initUserPage, this.$route.params.id)
+          this.isUploadingImage = false
         })
-        .catch()
+        .catch(() => {
+          this.isUploadingImage = false
+        })
     },
     splitString (stringToSplit, separator, join) {
       var arrayOfStrings = stringToSplit.split(separator)
@@ -139,4 +154,20 @@ input[type="file"] {
     bottom: 0;
     background-color: rgba(255, 255, 255, 0.37);
 }
+
+.loader {
+    border: 8px solid #f3f3f3; /* Light grey */
+    border-top: 8px solid #42db34; /* Blue */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+    margin: 25px auto;
+    z-index: 1;
+}
+
+img {
+  min-width: 200px;
+}
+
 </style>
