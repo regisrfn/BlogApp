@@ -11,7 +11,7 @@
                   <!-- image overlaping if mouse is over-->
                   <div @mouseleave="isMouseOver=false"
                   v-if="isMouseOver | isUploadingImage" class="overlap">
-                    <div v-if="isUploadingImage" class="center">
+                    <div v-if="isUploadingImage" class="center d-flex flex-column align-items-center">
                       <div class="loader"></div>
                       <h4 class="text-white"><strong>Loading ...</strong></h4>
                     </div>
@@ -95,7 +95,7 @@ export default {
     onFileChanged (event) {
       this.isUploadingImage = true
       this.selectedFile = event.target.files[0]
-      console.log(event)
+      // console.log(event)
       var formData = new FormData()
       formData.append('blogImage', this.selectedFile)
       formData.append('user', JSON.stringify(this.user))
@@ -163,21 +163,15 @@ input[type="file"] {
     height: 60px;
     animation: spin 2s linear infinite;
     margin: 0;
-    margin-left: 25%;
     z-index: 1;
 }
 
 img {
-  min-width: 200px;
+  min-width: 120px;
 }
 
 .center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  height: 30%;
-  width: 50%;
-  margin: -15% 0 0 -25%;
+  margin-top: 15%;
 }
 
 </style>
