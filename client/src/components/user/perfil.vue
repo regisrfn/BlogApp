@@ -10,10 +10,10 @@
                 <div @mouseenter="isMouseOver=true" class="col-sm-12 px-0">
                   <!-- image overlaping if mouse is over-->
                   <div @mouseleave="isMouseOver=false"
-                  v-if="isMouseOver" class="overlap">
-                    <div v-if="isUploadingImage">
+                  v-if="isMouseOver | isUploadingImage" class="overlap">
+                    <div v-if="isUploadingImage" class="center">
                       <div class="loader"></div>
-                      <h3 class="text-white">Loading ...</h3>
+                      <h4 class="text-white"><strong>Loading ...</strong></h4>
                     </div>
                     <div v-else class="d-flex justify-content-center">
                       <label for="file-upload" class="custom-file-upload">
@@ -162,12 +162,22 @@ input[type="file"] {
     width: 60px;
     height: 60px;
     animation: spin 2s linear infinite;
-    margin: 25px auto;
+    margin: 0;
+    margin-left: 25%;
     z-index: 1;
 }
 
 img {
   min-width: 200px;
+}
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 30%;
+  width: 50%;
+  margin: -15% 0 0 -25%;
 }
 
 </style>
