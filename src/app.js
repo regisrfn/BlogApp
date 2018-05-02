@@ -138,9 +138,9 @@ app.put("/blogs/:id", upload.single('blogImage'), checkAuth, function(req, res) 
                             blogDB.findById(req.params.id)
                                 .populate('author', 'username')
                                 .then((blog) => io.sockets.emit('modifiedBlog',blog))
-                            // DELETING FILE FROM CLOUDINARY
-                            cloudinary.uploader.destroy(blog.image.public_id,
-                            {invalidate: true }, function(error, result) {console.log(result)})
+                                // DELETING FILE FROM CLOUDINARY
+                                cloudinary.uploader.destroy(blog.image.public_id,
+                                {invalidate: true }, function(error, result) {console.log(result)})
                             return res.status(200).json({
                                 status: true,
                             })

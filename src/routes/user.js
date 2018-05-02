@@ -60,6 +60,7 @@ router.post('/', (req, res) => {
 router.put('/:id', upload.single('blogImage'), checkAuth, (req, res) => {
     const user = req.body
     const file = req.file
+    const author = req.headers.user
 
     if (file) {    
         cloudinary.uploader.upload(req.file.path,
@@ -70,7 +71,7 @@ router.put('/:id', upload.single('blogImage'), checkAuth, (req, res) => {
                 }
                 
                 //console.log(image.url)
-                User.findByIdAndUpdate(req.params.id, {$set: {image: image}})
+                User.findByIdAndUpdate(author, {$set: {image: image}})
                 .exec()
                 .then(user => {
                     if (user.image.public_id !== 'greyson-joralemon-257251-unsplash') {
@@ -90,13 +91,19 @@ router.put('/:id', upload.single('blogImage'), checkAuth, (req, res) => {
                 })
         })
     } else {
-        //console.log(image.url)
-        User.findByIdAndUpdate(req.params.id, user)
+        // console.log(author)
+        User.findByIdAndUpdate(author, user)
         .exec()
         .then(user => {
-            return res.status(200).json({
-                status:true
-            })
+            if(user){
+                return res.status(200).json({
+                    status:true
+                })
+            }else {
+                return res.status(404).json({
+                    status:false
+                })
+            }
         })
         .catch(err => {
             console.log(err)
