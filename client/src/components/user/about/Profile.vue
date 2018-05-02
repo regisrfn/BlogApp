@@ -20,7 +20,12 @@
             <h5 v-for="(item,index) in keys" :key="index"
             class="col-md-6">
                 <strong class="mr-1">{{item}}</strong>
-                <input class="form-control" v-model="newUser[item.toLowerCase()]">
+                <select class="form-control" id="country"
+                v-if="item == 'Country'" v-model="newUser.country">
+                    <option v-for="(country,index) in countries" :key="index"
+                    :value="country.name">{{country.name}}</option>
+                </select>
+                <input v-else class="form-control" v-model="newUser[item.toLowerCase()]">
             </h5>
         </div>
     </div>
@@ -34,6 +39,7 @@
 <script>
 import * as types from '../../../store/types.js'
 import database from '../../../services/database.js'
+import countries from '../../../store/countries.js'
 // import toastr from 'toastr'
 
 export default {
@@ -41,7 +47,8 @@ export default {
     return {
       editON: false,
       newUser: {},
-      keys: ['Name', 'Username', 'City', 'Country', 'Birthday', 'Phone', 'Interests', 'Email', 'Website']
+      keys: ['Name', 'Username', 'City', 'Country', 'Birthday', 'Phone', 'Interests', 'Email', 'Website'],
+      countries
     }
   },
   computed: {
@@ -70,9 +77,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.form-control{
-    padding: 1px 0;
-}
-</style>
