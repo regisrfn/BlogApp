@@ -2,7 +2,7 @@
 <div class="container pt-3">
     <div class="d-flex justify-content-between">
         <h2 class="mb-0"> <i class="fas fa-user mr-3"></i>ABOUT</h2>
-        <button class="btn btn-success" v-if="!editON" v-on:click="editON = !editON">Edit</button>
+        <button class="btn btn-success" v-if="!editON" v-on:click="edit">Edit</button>
         <div v-else>
             <button class="btn btn-success"  v-on:click="submit">Save</button>
             <button class="btn btn-warning"  v-on:click="cancel">Cancel</button>
@@ -20,7 +20,7 @@
             <h5 v-for="(item,index) in keys" :key="index"
             class="col-md-6">
                 <strong class="mr-1">{{item}}</strong>
-                <input class="form-control" v-model="user[item.toLowerCase()]">
+                <input class="form-control" v-model="newUser[item.toLowerCase()]">
             </h5>
         </div>
     </div>
@@ -52,15 +52,20 @@ export default {
   methods: {
     submit () {
       this.editON = !this.editON
-      database.editUserPage(this.$store.getters[types.AUTHOR], this.user)
-        .then()
+      database.editUserPage(this.$store.getters[types.AUTHOR], this.newUser)
+        .then(() => {
+          this.$store.dispatch(types.setUserPage, this.newUser)
+        })
         .catch(() => {
           this.$router.push('/user/login')
         })
     },
     cancel () {
       this.editON = !this.editON
-      this.$store.dispatch(types.initUserPage, this.$route.params.id)
+    },
+    edit () {
+      this.newUser = Object.assign({}, this.user)
+      this.editON = !this.editON
     }
   }
 }
