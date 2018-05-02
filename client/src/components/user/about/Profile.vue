@@ -2,10 +2,10 @@
 <div class="container pt-3">
     <div class="d-flex justify-content-between">
         <h2 class="mb-0"> <i class="fas fa-user mr-3"></i>ABOUT</h2>
-        <button class="btn btn-success" v-if="!editON" v-on:click="edit">Edit</button>
+        <button class="btn btn-success btn-sm" v-if="!editON" v-on:click="edit">Edit</button>
         <div v-else>
-            <button class="btn btn-success"  v-on:click="submit">Save</button>
-            <button class="btn btn-warning"  v-on:click="cancel">Cancel</button>
+            <button class="btn btn-success mb-1 btn-sm"  v-on:click="submit">Save</button>
+            <button class="btn btn-warning mb-1 btn-sm"  v-on:click="cancel">Cancel</button>
         </div>
     </div>
     <hr>
