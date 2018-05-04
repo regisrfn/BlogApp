@@ -7,9 +7,9 @@ import userPage from './modules/userPage'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  modules: {
-    blogs,
-    auth,
-    userPage
-  }
+    modules: {
+        blogs,
+        auth,
+        userPage
+    }
 })

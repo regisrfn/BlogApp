@@ -17,85 +17,85 @@ import toastr from 'toastr'
 Vue.use(Router)
 
 export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
-    },
-    {
-      path: '/blogs',
-      component: Blogs,
-      children: [
+    routes: [
         {
-          path: '',
-          name: 'IndexBlog',
-          component: IndexBlog
+            path: '/',
+            name: 'HelloWorld',
+            component: HelloWorld
         },
         {
-          path: 'new',
-          name: 'NewBlog',
-          component: NewBlog,
-          beforeEnter: (to, from, next) => {
-            if (store.getters[types.TOKEN]) {
-              next()
-            } else {
-              toastr.warning('Please sign in', 'Login')
-              next('/user/login')
-            }
-          }
+            path: '/blogs',
+            component: Blogs,
+            children: [
+                {
+                    path: '',
+                    name: 'IndexBlog',
+                    component: IndexBlog
+                },
+                {
+                    path: 'new',
+                    name: 'NewBlog',
+                    component: NewBlog,
+                    beforeEnter: (to, from, next) => {
+                        if (store.getters[types.TOKEN]) {
+                            next()
+                        } else {
+                            toastr.warning('Please sign in', 'Login')
+                            next('/user/login')
+                        }
+                    }
+                },
+                {
+                    path: ':id',
+                    name: 'showBlog',
+                    component: ShowBlog
+                },
+                {
+                    path: ':id/edit',
+                    name: 'editBlog',
+                    component: editBlog,
+                    beforeEnter: (to, from, next) => {
+                        const actualAuthor = store.getters[types.AUTHOR]
+                        const blogAuthor = store.getters[types.BLOG].author._id
+                        if (store.getters[types.TOKEN] && (actualAuthor === blogAuthor)) {
+                            next()
+                        } else {
+                            toastr.warning('Please sign in', 'Login')
+                            next('/user/login')
+                        }
+                    }
+                }
+            ]
         },
         {
-          path: ':id',
-          name: 'showBlog',
-          component: ShowBlog
-        },
-        {
-          path: ':id/edit',
-          name: 'editBlog',
-          component: editBlog,
-          beforeEnter: (to, from, next) => {
-            const actualAuthor = store.getters[types.AUTHOR]
-            const blogAuthor = store.getters[types.BLOG].author._id
-            if (store.getters[types.TOKEN] && (actualAuthor === blogAuthor)) {
-              next()
-            } else {
-              toastr.warning('Please sign in', 'Login')
-              next('/user/login')
-            }
-          }
+            path: '/user',
+            component: user,
+            children: [
+                {
+                    path: 'login',
+                    name: 'login',
+                    component: login
+                },
+                {
+                    path: 'signup',
+                    name: 'signup',
+                    component: signup
+                },
+                {
+                    path: ':id',
+                    name: 'user',
+                    component: Perfil,
+                    beforeEnter: (to, from, next) => {
+                        if (store.getters[types.TOKEN]) {
+                            next()
+                        } else {
+                            toastr.warning('Please sign in', 'Login')
+                            next('/user/login')
+                        }
+                    }
+                }
+            ]
         }
-      ]
-    },
-    {
-      path: '/user',
-      component: user,
-      children: [
-        {
-          path: 'login',
-          name: 'login',
-          component: login
-        },
-        {
-          path: 'signup',
-          name: 'signup',
-          component: signup
-        },
-        {
-          path: ':id',
-          name: 'user',
-          component: Perfil,
-          beforeEnter: (to, from, next) => {
-            if (store.getters[types.TOKEN]) {
-              next()
-            } else {
-              toastr.warning('Please sign in', 'Login')
-              next('/user/login')
-            }
-          }
-        }
-      ]
-    }
-  ],
-  mode: 'history'
+    ],
+    mode: 'history'
 })
