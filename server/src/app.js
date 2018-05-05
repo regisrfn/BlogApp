@@ -116,57 +116,22 @@ app.get("/blogs/:id", function(req, res) {
 })
 
 // EDIT
-app.put("/blogs/:id", upload.single('blogImage'), checkAuth, function(req, res) {
+app.put("/blogs/:id", upload.single('blogImage'), checkAuth, async function(req, res) {
     const blog = JSON.parse(req.body.blog)
     const file = req.file
+
     if (file) {
-        try {
-            cloudinary.uploader.upload(req.file.path, function(result) { 
-                var image = {
-                    url: result.secure_url,
-                    public_id: result.public_id
-                }
-                blog.image = image
-                blogDB.findOneAndUpdate({author:req.headers.user, _id:req.params.id}, blog)
-                    .exec()
-                    .then(blog => {
-                        if(blog){
-                            blogDB.find()
-                                .sort({created:-1})
-                                .populate('author', 'username')
-                                .then((blogs) => io.sockets.emit('newBlog',blogs))
-                            blogDB.findById(req.params.id)
-                                .populate('author', 'username')
-                                .then((blog) => io.sockets.emit('modifiedBlog',blog))
-                                // DELETING FILE FROM CLOUDINARY
-                                cloudinary.uploader.destroy(blog.image.public_id,
-                                {invalidate: true }, function(error, result) {console.log(result)})
-                            return res.status(200).json({
-                                status: true,
-                            })
-                        } else {
-                            console.log(error)
-                            return res.status(404).json({
-                                status: false,
-                            })
-                        }            
-                    })
-                    .catch((error) => {
-                        console.log(error)
-                        return res.status(500).json({
-                            status: false,
-                            error,
-                        })
-                    })
-            })
-        } catch (error) {
-            console.log(error)
-            return res.status(500).json({
-                status: false,
-            })
+        // DELETING FILE FROM CLOUDINARY
+        cloudinary.uploader.destroy(blog.image.public_id, {invalidate: true }, function(error, result) {console.log(result)})
+        var result = await cloudinary.uploader.upload(req.file.path)
+        var image = {
+            url: result.secure_url,
+            public_id: result.public_id
         }
-    } else {
-        blogDB.findOneAndUpdate({author:req.headers.user, _id:req.params.id}, blog)
+        blog.image = image
+    }
+
+    blogDB.findOneAndUpdate({author:req.headers.user, _id:req.params.id}, blog)
         .exec()
         .then(blog => {
             if(blog){
@@ -193,9 +158,7 @@ app.put("/blogs/:id", upload.single('blogImage'), checkAuth, function(req, res) 
                 status: false,
                 error,
             })
-        })  
-    }
-    
+        })
 })
 
 // CREATE COMMENT
