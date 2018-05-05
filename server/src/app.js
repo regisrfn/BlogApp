@@ -283,13 +283,19 @@ app.get("/blogs/:id/comments", function(req, res) {
 app.put("/blogs/:id/comments/:idComment", checkAuth, function(req, res) {
     var comment = req.body.comment
     // console.log(comment)
-    commentsDB.findOneAndUpdate({author:req.headers.user, blog:req.params.id, _id:req.params.idComment},
+    commentsDB.findOneAndUpdate({blog:req.params.id, _id:req.params.idComment},
     comment)
         .exec()
-        .then(() => {
-            return res.status(200).json({
-                status: true
+        .then((comment) => {
+            if (comment) {
+                return res.status(200).json({
+                    status: true
+                })
+            } else {
+                return res.status(404).json({
+                    status: false
             })
+            }
         })
         .catch((error) => {
             console.log(error)
