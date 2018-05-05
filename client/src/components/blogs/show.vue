@@ -33,7 +33,10 @@
                 <p v-if="blogComments.length == 0"> There are not comments on this post</p>
                 <h5 v-else> {{blogComments.length}} comments</h5>
                 <ul class="list-group">
-                    <li class="list-group-item list-group-item-action flex-column align-items-start" v-on:click="editComment(comment)" :class="{newComment:isAuthor(blog.author._id) & comment.meta.new}" v-for="comment in blogComments" :key="comment._id">
+                    <li class="list-group-item list-group-item-action flex-column align-items-start"
+                    v-on:click="editComment(comment)"
+                    :class="{newComment:isAuthor(blog.author._id) & comment.meta.new}"
+                    v-for="comment in blogComments" :key="comment._id">
                         <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">{{comment.author.username}}</h5>
                             <small>{{comment.created | moment("from", "now")}}</small>
@@ -58,7 +61,8 @@ export default {
     data () {
         return {
             commentText: null,
-            interval: null
+            interval: null,
+            isRemovingComment: false
         }
     },
     computed: {
@@ -116,16 +120,23 @@ export default {
                 })
         },
         editComment (comment) {
-            if (this.isAuthor(this.blog.author._id)) {
+            if (this.isAuthor(this.blog.author._id) && !this.isRemovingComment) {
                 comment.meta.new = false
                 database.editComment(this.$route.params.id, comment._id, {comment})
                     .then()
             }
         },
         removeComment (id) {
+            this.isRemovingComment = true
             database.removeComment(this.$route.params.id, id)
-                .then(() => toastr.success('Comment has been sucessfully removed.', 'Removed!'))
-                .catch(() => toastr.error('Error on delete comment', 'Error!'))
+                .then(() => {
+                    this.isRemovingComment = false
+                    toastr.success('Comment has been sucessfully removed.', 'Removed!')
+                })
+                .catch(() => {
+                    this.isRemovingComment = false
+                    toastr.error('Error on delete comment', 'Error!')
+                })
         },
         splitString (stringToSplit, separator, join) {
             var arrayOfStrings = stringToSplit.split(separator)
