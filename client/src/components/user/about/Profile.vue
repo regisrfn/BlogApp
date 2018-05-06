@@ -22,7 +22,9 @@
                         <option v-for="(country,index) in countries" :key="index"
                         :value="country.name">{{country.name}}</option>
                     </select>
-                    <input v-else class="form-control" v-model="newUser[item.toLowerCase()]">
+                    <input v-else class="form-control"
+                        :value="user[item.toLowerCase()]"
+                        @blur="onChange(item.toLowerCase(), $event.target.value)">
                 </h5>
             </div>
         </div>
@@ -57,8 +59,10 @@ export default {
         submit () {
             this.editON = !this.editON
             database.editUserPage(this.$store.getters[types.AUTHOR], this.newUser)
-                .then(() => {
-                    this.$store.dispatch(types.setUserPage, this.newUser)
+                .then((response) => {
+                    if (response.data.status) {
+                        this.$store.dispatch(types.initUserPage, this.$route.params.id)
+                    }
                 })
                 .catch(() => {
                     this.$router.push('/user/login')
@@ -68,8 +72,12 @@ export default {
             this.editON = !this.editON
         },
         edit () {
-            this.newUser = Object.assign({}, this.user)
+            // this.newUser = Object.assign({}, this.user)
             this.editON = !this.editON
+        },
+        onChange (key, value) {
+            this.newUser[key] = value
+            // console.log(this.newUser)
         }
     }
 }
