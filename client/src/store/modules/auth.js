@@ -38,6 +38,10 @@ export default {
             if (now >= expiresIn) {
                 dispatch(types.LOGOUT)
                 return
+            } else {
+                var expiration = (expiresIn - now)
+                // console.log(expiration)
+                dispatch(types.setLogoutTimer, expiration)
             }
             const username = localStorage.getItem('username')
             const author = localStorage.getItem('author')
@@ -52,7 +56,7 @@ export default {
         [types.setLogoutTimer] ({dispatch}, expiration) {
             setTimeout(() => {
                 dispatch(types.LOGOUT)
-            }, expiration * 1000)
+            }, expiration)
         }
     },
     getters: {
