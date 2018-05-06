@@ -92,8 +92,11 @@ export default {
             this.selectedFile = event.target.files[0]
             // console.log(event)
             var formData = new FormData()
+            var user = {
+                image: this.user.image
+            }
             formData.append('blogImage', this.selectedFile)
-            formData.append('user', JSON.stringify(this.user))
+            formData.append('user', JSON.stringify(user))
             database.editUserPage(this.$store.getters[types.AUTHOR], formData)
                 .then(response => {
                     this.$store.dispatch(types.initUserPage, this.$route.params.id)
