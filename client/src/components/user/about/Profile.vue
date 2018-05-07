@@ -58,15 +58,20 @@ export default {
     methods: {
         submit () {
             this.editON = !this.editON
-            database.editUserPage(this.$store.getters[types.AUTHOR], this.newUser)
-                .then((response) => {
-                    if (response.data.status) {
-                        this.$store.dispatch(types.initUserPage, this.$route.params.id)
-                    }
-                })
-                .catch(() => {
-                    this.$router.push('/user/login')
-                })
+            if (this.newUser) {
+                database.editUserPage(this.$store.getters[types.AUTHOR], this.newUser)
+                    .then((response) => {
+                        if (response.data.status) {
+                            // console.log(response.data.userEdited)
+                            var editedUser = Object.assign(this.user, response.data.userEdited)
+                            // console.log(editedUser)
+                            this.$store.dispatch(types.setUserPage, editedUser)
+                        }
+                    })
+                    .catch(() => {
+                        this.$router.push('/user/login')
+                    })
+            }
         },
         cancel () {
             this.editON = !this.editON
@@ -76,7 +81,9 @@ export default {
             this.editON = !this.editON
         },
         onChange (key, value) {
-            this.newUser[key] = value
+            if (value !== this.user[key]) {
+                this.newUser[key] = value
+            }
             // console.log(this.newUser)
         }
     }

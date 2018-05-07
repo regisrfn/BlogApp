@@ -99,7 +99,12 @@ export default {
             formData.append('user', JSON.stringify(user))
             database.editUserPage(this.$store.getters[types.AUTHOR], formData)
                 .then(response => {
-                    this.$store.dispatch(types.initUserPage, this.$route.params.id)
+                    if (response.data.status) {
+                        // console.log(response.data.userEdited)
+                        var editedUser = Object.assign(this.user, response.data.userEdited)
+                        // console.log(editedUser)
+                        this.$store.dispatch(types.setUserPage, editedUser)
+                    }
                     this.isUploadingImage = false
                 })
                 .catch(() => {
