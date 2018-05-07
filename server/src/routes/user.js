@@ -7,7 +7,8 @@ const jwt = require('jsonwebtoken')
 const checkAuth = require('../middleware/chechAuth')
 const upload = require('../models/multer')
 const cloudinary = require('../cloudinary/cloud')
-const s3 = require('../amazon/s3')
+const s3 = require('../API_S3/API')
+var FormData = require('form-data')
 
 //CREATE
 router.post('/', (req, res) => {
@@ -67,7 +68,9 @@ router.put('/:id', upload.single('blogImage'), checkAuth, async (req, res) => {
     
     if (file) {
         user = JSON.parse(req.body.user)
-        // s3.upload(file)
+        s3.uploadImage({image: file})
+            .then()
+            .catch()      
         var result = await cloudinary.uploader.upload(req.file.path)
         if (user.image.public_id !== 'greyson-joralemon-257251-unsplash') {
             // DELETING FILE FROM CLOUDINARY
