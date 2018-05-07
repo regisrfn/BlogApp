@@ -82,13 +82,24 @@ router.put('/:id', upload.single('blogImage'), checkAuth, async (req, res) => {
         user.image = image
     }
     // console.log(user)
-    User.findByIdAndUpdate(author, user)
+    User.findById(author)
         .exec()
-        .then(user => {
-            if (user) {
-                return res.status(200).json({
-                    status: true
-                })
+        .then(userFound => {
+            if (userFound) {
+                userFound.set(user)
+                userFound.save()
+                    .then((userEdited) => {
+                        return res.status(200).json({
+                            userEdited,
+                            status: true
+                        })
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                        return res.status(500).json({
+                            status: false
+                        })
+                    })
             } else {
                 return res.status(404).json({
                     status: false
