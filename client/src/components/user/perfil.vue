@@ -15,8 +15,9 @@
                                 <h4 class='text-white'><strong>Loading ...</strong></h4>
                             </div>
                             <div v-else class='d-flex justify-content-center'>
-                                <label for='file-upload' class='custom-file-upload'><i class='fa fa-edit'></i> Choose Image
-                                            </label>
+                                <label for='file-upload' class='custom-file-upload'>
+                                    <i class='fa fa-edit'></i> Choose Image
+                                </label>
                                 <input @change='onFileChanged' id='file-upload' type='file' />
                             </div>
                         </div>

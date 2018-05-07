@@ -18,9 +18,12 @@
             <div class="row" v-else>
                 <h5 v-for="(item,index) in keys" :key="index" class="col-md-6">
                     <strong class="mr-1">{{item}}</strong>
-                    <select class="form-control" id="country" v-if="item == 'Country'" v-model="newUser.country">
+                    <select class="form-control" id="country" v-if="item == 'Country'"
+                        :value="user[item.toLowerCase()]"
+                        @blur="onChange(item.toLowerCase(), $event.target.value)">
                         <option v-for="(country,index) in countries" :key="index"
-                        :value="country.name">{{country.name}}</option>
+                            :value="country.name">{{country.name}}
+                        </option>
                     </select>
                     <input v-else class="form-control"
                         :value="user[item.toLowerCase()]"
