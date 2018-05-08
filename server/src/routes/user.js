@@ -10,6 +10,10 @@ const cloudinary = require('../cloudinary/cloud')
 const s3 = require('../API_S3/API')
 var FormData = require('form-data')
 
+//client.js
+var io = require('socket.io-client')
+var socket = io.connect(process.env.S3_API || 'http://localhost:8082', {reconnect: true})
+
 //CREATE
 router.post('/', (req, res) => {
     User.find({
@@ -67,6 +71,9 @@ router.put('/:id', upload.single('blogImage'), checkAuth, async (req, res) => {
     const author = req.headers.user
     
     if (file) {
+        socket.on('progress', (data) => {
+            console.log(data)
+        })
         user = JSON.parse(req.body.user)
         var response = await s3.uploadImage({image: file})
         var image = {
@@ -74,9 +81,8 @@ router.put('/:id', upload.single('blogImage'), checkAuth, async (req, res) => {
             public_id: req.file.filename
         }
         user.image = image
-        
     }
-    console.log(image)
+    // console.log(image)
     User.findById(author)
         .exec()
         .then(userFound => {

@@ -18,6 +18,10 @@ var socketIO = require('socket.io')
 var server = http.createServer(app)
 var io = socketIO(server)
 
+// Add a connect listener
+// socket.on('connect', function (socket) {
+//     console.log('Connected!');
+// })
 // io.on('connection', (socket) => {
 //     console.log("User connected")
 // })
@@ -25,7 +29,6 @@ var io = socketIO(server)
 app.use(morgan('combine'))
 app.use(bodyParser.json())
 app.use(cors())
-
 app.use('/user', userRoutes)
 
 app.get('/blogs', function (req, res) {
