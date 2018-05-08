@@ -68,25 +68,15 @@ router.put('/:id', upload.single('blogImage'), checkAuth, async (req, res) => {
     
     if (file) {
         user = JSON.parse(req.body.user)
-        s3.uploadImage({image: file})
-            .then()
-            .catch()      
-        var result = await cloudinary.uploader.upload(req.file.path)
-        if (user.image.public_id !== 'greyson-joralemon-257251-unsplash') {
-            // DELETING FILE FROM CLOUDINARY
-            cloudinary.uploader.destroy(user.image.public_id, {
-                invalidate: true
-            }, function (error, result) {
-                console.log(result)
-            })
-        }
+        var response = await s3.uploadImage({image: file})
         var image = {
-            url: result.secure_url,
-            public_id: result.public_id
+            url: response.data.imageURL,
+            public_id: req.file.filename
         }
         user.image = image
+        
     }
-    // console.log(user)
+    console.log(image)
     User.findById(author)
         .exec()
         .then(userFound => {
@@ -117,7 +107,6 @@ router.put('/:id', upload.single('blogImage'), checkAuth, async (req, res) => {
                 message: "User not found"
             })
         })
-
 })
 
 //GET USER
