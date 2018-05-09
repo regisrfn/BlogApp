@@ -12,7 +12,7 @@ var FormData = require('form-data')
 
 //client.js
 var io = require('socket.io-client')
-var socket = io.connect(process.env.S3_API || 'http://localhost:8082', {reconnect: true})
+var socket = io.connect(process.env.S3_API, {reconnect: true})
 
 //CREATE
 router.post('/', (req, res) => {
@@ -78,7 +78,7 @@ router.put('/:id', upload.single('blogImage'), checkAuth, async (req, res) => {
         var response = await s3.uploadImage({image: file})
         var image = {
             url: response.data.imageURL,
-            public_id: req.file.filename
+            public_id: response.data.id
         }
         user.image = image
     }
