@@ -7,6 +7,12 @@ const jwt = require('jsonwebtoken')
 const checkAuth = require('../middleware/chechAuth')
 const upload = require('../models/multer')
 const cloudinary = require('../cloudinary/cloud')
+const s3 = require('../API_S3/API')
+var FormData = require('form-data')
+
+//client.js
+var io = require('socket.io-client')
+var socket = io.connect(process.env.S3_API, {reconnect: true})
 
 //CREATE
 router.post('/', (req, res) => {
@@ -65,23 +71,18 @@ router.put('/:id', upload.single('blogImage'), checkAuth, async (req, res) => {
     const author = req.headers.user
     
     if (file) {
+        socket.on('progress', (data) => {
+            console.log(data)
+        })
         user = JSON.parse(req.body.user)
-        var result = await cloudinary.uploader.upload(req.file.path)
-        if (user.image.public_id !== 'greyson-joralemon-257251-unsplash') {
-            // DELETING FILE FROM CLOUDINARY
-            cloudinary.uploader.destroy(user.image.public_id, {
-                invalidate: true
-            }, function (error, result) {
-                console.log(result)
-            })
-        }
+        var response = await s3.uploadImage({image: file})
         var image = {
-            url: result.secure_url,
-            public_id: result.public_id
+            url: response.data.imageURL,
+            public_id: response.data.id
         }
         user.image = image
     }
-    // console.log(user)
+    // console.log(image)
     User.findById(author)
         .exec()
         .then(userFound => {
@@ -112,7 +113,6 @@ router.put('/:id', upload.single('blogImage'), checkAuth, async (req, res) => {
                 message: "User not found"
             })
         })
-
 })
 
 //GET USER
