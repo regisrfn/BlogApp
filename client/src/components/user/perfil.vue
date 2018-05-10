@@ -96,7 +96,7 @@ export default {
             var user = {
                 image: this.user.image
             }
-            formData.append('blogImage', this.selectedFile)
+            formData.append('image', this.selectedFile)
             formData.append('user', JSON.stringify(user))
             database.editUserPage(this.$store.getters[types.AUTHOR], formData)
                 .then(response => {
