@@ -9,7 +9,7 @@ const upload = require('../models/multer')
 const cloudinary = require('../cloudinary/cloud')
 const s3 = require('../API_S3/API')
 var FormData = require('form-data')
-
+var fs = require('fs')
 //client.js
 var io = require('socket.io-client')
 var socket = io.connect(process.env.S3_API, {reconnect: true})
@@ -65,22 +65,36 @@ router.post('/', (req, res) => {
 
 })
 //EDIT USER
-router.put('/:id', upload.single('blogImage'), checkAuth, async (req, res) => {
+router.put('/:id', upload.single('image'), checkAuth, async (req, res) => {
     var user = req.body
     const file = req.file
     const author = req.headers.user
     
-    if (file) {
+    if (file) {       
         socket.on('progress', (data) => {
             console.log(data)
         })
-        user = JSON.parse(req.body.user)
-        var response = await s3.uploadImage({image: file})
-        var image = {
-            url: response.data.imageURL,
-            public_id: response.data.id
+
+        var buff = fs.readFileSync(file.path)  
+        var base64Data = buff.toString('base64')
+
+        // console.log('Image converted to base 64 is:\n\n' + base64data)
+        try{
+            var response = await s3.uploadImage({base64Data, file})
+        } catch (err) {
+            console.log(err)
+            return res.status(500).json({
+                message: "Error uploading image"
+            })
+        }finally{
+            var image = {
+                url: response.data.imageURL,
+                public_id: response.data.id
+            }
+            user = JSON.parse(req.body.user)
+            user.image = image
         }
-        user.image = image
+        
     }
     // console.log(image)
     User.findById(author)

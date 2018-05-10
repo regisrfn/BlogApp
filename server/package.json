@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "bcrypt": "^1.0.3",
+    "blob": "0.0.4",
     "body-parser": "^1.18.2",
     "cloudinary": "^1.11.0",
     "cors": "^2.8.4",
