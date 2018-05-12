@@ -76,11 +76,11 @@ router.put('/:id', upload.single('image'), checkAuth, async (req, res) => {
         })
 
         var buff = fs.readFileSync(file.path)  
-        var base64Data = buff.toString('base64')
+        var base64Data = buff
         user = JSON.parse(req.body.user)
         // console.log('Image converted to base 64 is:\n\n' + base64data)
         try{
-            console.log(user)
+            // console.log(user)
             var oldImage = user.image
             var response = await s3.uploadImage({base64Data, file, oldImage})
             
