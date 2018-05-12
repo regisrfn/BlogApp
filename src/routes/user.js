@@ -74,7 +74,6 @@ router.put('/:id', upload.single('image'), checkAuth, async (req, res) => {
         socket.on('progress', (data) => {
             console.log(data)
         })
-        
         var buff = fs.readFileSync(file.path)  
         var base64Data = buff
         user = JSON.parse(req.body.user)
