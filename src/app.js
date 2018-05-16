@@ -25,7 +25,7 @@ var io = socketIO(server)
 // io.on('connection', (socket) => {
 //     console.log("User connected")
 // })
-app.use(morgan('combine'))
+app.use(morgan('combined'))
 app.use(bodyParser.json({limit: '100mb'}))
 app.use(cors())
 app.use('/user', userRoutes)
