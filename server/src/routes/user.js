@@ -42,7 +42,8 @@ router.post('/', (req, res) => {
                         user
                             .save()
                             .then(result => {
-                                res.status(201).json({
+                                res.status(200).json({
+                                    status:true,
                                     message: 'User created'
                                 })
                             })
