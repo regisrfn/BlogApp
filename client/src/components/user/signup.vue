@@ -69,8 +69,7 @@ export default {
                 }
                 database.signup(user)
                     .then(() => this.$router.push('/user/login'))
-                    .catch(() => toastr.error('Error on creating user'))
-                    
+                    .catch(() => toastr.error('Error on creating user'))                    
             } else {
                 toastr.error('Please fill up all the fields.', 'Empty Fields!')
             }
