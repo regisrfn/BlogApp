@@ -60,23 +60,16 @@ export default {
         }
     },
     methods: {
-        async submit () {
+        submit () {
             if(!this.$v.$invalid){
                 const user = {
                     email: this.email,
                     username: this.username,
                     password: this.password
                 }
-                const response = await database.signup(user)
-                const status = response.data.status
-                // console.log(response.data)
-                if (status) {
-                    const authData = {
-                        token: response.data.token,
-                        username: response.data.username
-                    }
-                    this.router.push('/user/login')
-                }
+                database.signup(user)
+                    .then(() => this.$router.push('/user/login'))
+                    .catch(() => toastr.error('Error on creating user'))
             } else {
                 toastr.error('Please fill up all the fields.', 'Empty Fields!')
             }
