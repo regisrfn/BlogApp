@@ -27,6 +27,7 @@ var io = socketIO(server)
 // })
 app.use(morgan('combined'))
 app.use(bodyParser.json({limit: '100mb'}))
+app.options('*', cors()) // include before other routes
 app.use(cors())
 app.use('/user', userRoutes)
 
