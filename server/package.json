@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "blob": "0.0.4",
     "body-parser": "^1.18.2",
