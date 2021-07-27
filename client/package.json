@@ -15,7 +15,7 @@
     "heroku-postbuild": "npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "dependencies": {
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "body-parser": "^1.18.2",
     "connect-history-api-fallback": "^1.5.0",
     "cors": "^2.8.4",
